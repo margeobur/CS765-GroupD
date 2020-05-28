@@ -1,33 +1,42 @@
+import random
+from numpy import gauss, clip, interp
+
 class Mapping:
     def __init__(self):
         self.n_points = 4
         self.xs = []
         self.ys = []
 
-        randomise()
+        self.randomise()
 
     def __init__(self, copy_me):
-        for i in range(0, n_points):
+        self.__init__(self)
+
+        for i in range(0, self.n_points):
             self.xs[i] = copy_me.xs[i]
             self.ys[i] = copy_me.ys[i]
 
-    def randomise():
-        for i in range(n_points):
-            xs[i] = random.randrange(0, 2)
-            ys[i] = random.randrange(-1, 2)
+    def randomise(self):
+        for i in range(self.n_points):
+            self.xs[i] = random.randrange(0, 2)
+            self.ys[i] = random.randrange(-1, 2)
 
-        xs[0] = 0.0
-        xs[n_points - 1] = 1.0
+        self.xs[0] = 0.0
+        self.xs[self.n_points - 1] = 1.0
 
-    def mutate():
+    def mutate(self):
+        xs = self.xs
+        ys = self.ys
+        n_points = self.n_points
+
         mu_1 = 0.01
         mu_2 = 0.02
-        for i in range(i, n_points):
-            xs[i] += random_gaussian() * mu_1
-            ys[i] += random_gaussian() * mu_2
+        for i in range(0, self.n_points):
+            xs[i] += gauss() * mu_1
+            ys[i] += gauss() * mu_2
 
-            xs[i] = constrain(xs[i], 0.0, 1.0)
-            ys[i] = constrain(ys[i], -1.0, 1.0)
+            xs[i] = clip(xs[i], 0.0, 1.0)
+            ys[i] = clip(ys[i], -1.0, 1.0)
 
             if random.randrange(0, 1.0) < mu_2:
                 xs[i] = random.randrange(0.0, 1.0)
@@ -41,34 +50,40 @@ class Mapping:
 
         xs[0] = 0.0
         xs[n_points - 1] = 1.0
+        self.xs = xs
+        self.ys = ys
 
-    def f(x):
+    def f(self, x):
         x = min(1.0, x)
-        for i in range(0, self.n_points):
-            if x <= self.xs[i + 1]:
-                output = lerp(ys[i], ys[i + 1], x - self.xs[i] / self.xs[i + 1] - self.xs[i])
+        xs = self.xs
+        ys = self.ys
+        n_points = self.n_points
+
+        for i in range(0, n_points):
+            if x <= xs[i + 1]:
+                output = interp(ys[i], ys[i + 1], x - xs[i] / xs[i + 1] - xs[i])
                 return output
 
         print("non-interpolatable input: error")
-        print(x)
+        print(self)
         exit()
         return 0.0
 
-    def printxs(pre):
+    def printxs(self, pre):
         for i in range(0, self.n_points):
             print(pre, end = "")
             print("[" + i + "]=", end = "")
             print(self.xs[i], end = "")
             print(";")
 
-    def printys(pre):
+    def printys(self, pre):
         for i in range(0, self.n_points):
             print(pre, end = "")
             print("[" + i + "]=", end = "")
             print(self.ys[i], end = "")
             print(";")
 
-    def draw():
+    def draw(self):
         for i in range(0, self.n_points):
             #draw line
             return True
@@ -77,7 +92,7 @@ class EvolvableBrain:
     def __init__(self):
         self.n_senses = 3
         self.n_motors = 2
-        self.maps = []
+        self.maps = [[0 for x in range(self.n_senses)] for y in range(self.n_motors)]
 
         for i in range(0, self.n_senses + 1):
             for j in range(0, self.n_motors + 1):
