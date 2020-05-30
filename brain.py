@@ -1,20 +1,18 @@
 import random
-from numpy import gauss, clip, interp
+import numpy
 
 class Mapping:
-    def __init__(self):
+    def __init__(self, copy_me=None):
         self.n_points = 4
         self.xs = []
         self.ys = []
 
-        self.randomise()
-
-    def __init__(self, copy_me):
-        self.__init__(self)
-
-        for i in range(0, self.n_points):
-            self.xs[i] = copy_me.xs[i]
-            self.ys[i] = copy_me.ys[i]
+        if copy_me is None:
+            self.randomise()
+        else:
+            for i in range(0, self.n_points):
+                self.xs[i] = copy_me.xs[i]
+                self.ys[i] = copy_me.ys[i]
 
     def randomise(self):
         for i in range(self.n_points):
@@ -32,11 +30,11 @@ class Mapping:
         mu_1 = 0.01
         mu_2 = 0.02
         for i in range(0, self.n_points):
-            xs[i] += gauss() * mu_1
-            ys[i] += gauss() * mu_2
+            xs[i] += random.gauss() * mu_1
+            ys[i] += random.gauss() * mu_2
 
-            xs[i] = clip(xs[i], 0.0, 1.0)
-            ys[i] = clip(ys[i], -1.0, 1.0)
+            xs[i] = numpy.clip(xs[i], 0.0, 1.0)
+            ys[i] = numpy.clip(ys[i], -1.0, 1.0)
 
             if random.randrange(0, 1.0) < mu_2:
                 xs[i] = random.randrange(0.0, 1.0)
@@ -61,7 +59,7 @@ class Mapping:
 
         for i in range(0, n_points):
             if x <= xs[i + 1]:
-                output = interp(ys[i], ys[i + 1], x - xs[i] / xs[i + 1] - xs[i])
+                output = numpy.interp(ys[i], ys[i + 1], x - xs[i] / xs[i + 1] - xs[i])
                 return output
 
         print("non-interpolatable input: error")
@@ -89,15 +87,19 @@ class Mapping:
             return True
 
 class EvolvableBrain:
-    def __init__(self):
+    def __init__(self, copy_me=None):
         self.n_senses = 3
         self.n_motors = 2
         self.maps = [[0 for x in range(self.n_senses)] for y in range(self.n_motors)]
+        if copy_me is None:
+            for i in range(0, self.n_senses + 1):
+                for j in range(0, self.n_motors + 1):
+                    self.maps[i][j] = Mapping()
+        else:
+            for i in range(0, self.n_senses + 1):
+                for j in range(0, self.n_motors + 1):
+                    self.maps[i][j] = Mapping(copy_me.maps[i][j])
 
-        for i in range(0, self.n_senses + 1):
-            for j in range(0, self.n_motors + 1):
-                copy_me = self.maps[i][j]
-                self.maps[i][j] = Mapping(copy_me)
 
     def randomise(self):
         for i in range(0, self.n_senses + 1):
@@ -115,7 +117,7 @@ class EvolvableBrain:
                 copy.self.maps[i][j].mutate()
         return copy
 
-    def iterate(robot):
+    def iterate(self, robot):
         lm_accum = 0.5
         rm_accum = -0.5
 
