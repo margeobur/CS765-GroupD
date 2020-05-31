@@ -1,5 +1,6 @@
 import random
 import enum
+import numpy as np
 
 arena_width = 50
 # timestep
@@ -12,8 +13,10 @@ class ThingType(enum.Enum):
 
 class Thing:
 	def __init__(self, ntype):
-		self.x = random.randrange(0, arena_width)
-		self.y = random.randrange(0, arena_width)
+		self.position = np.array([
+			random.randrange(0, arena_width),
+			random.randrange(0, arena_width)
+		])
 
 		self.amount = 1.0
 		self.radius = 1.0
@@ -36,8 +39,10 @@ class Thing:
 	def update(self):
 		if self.amount < 0.0:
 			self.amount = 1.0
-			self.x = random.randrange(0, arena_width)
-			self.y = random.randrange(0, arena_width)
+			self.position = np.array([
+				random.randrange(0, arena_width),
+				random.randrange(0, arena_width)
+			])
 
 
 class Environment:
@@ -73,19 +78,19 @@ class Environment:
 		#draw stroke here
 
 		for thing in self.foods:
-			if dist(thing.x, thing.y, robot.x, robot.y) < thing.radius:
+			if np.linalg.norm(thing.position - robot.position) < thing.radius:
 				thing.amount -= consumption_rate * timestep
 				robot.food_battery += fill_rate * timestep
 
 
 		for thing in self.waters:
-			if dist(thing.x, thing.y, robot.x, robot.y) < thing.radius:
+			if np.linalg.norm(thing.position - robot.position) < thing.radius:
 				thing.amount -= consumption_rate * timestep
 				robot.water_battery += fill_rate * timestep
 
 
 		for thing in self.traps:
-			if dist(thing.x, thing.y, robot.x, robot.y) < thing.radius:
+			if np.linalg.norm(thing.position - robot.position) < thing.radius:
 				robot.food_battery = 0.0
 				robot.water_battery = 0.0
 				robot.is_alive = False
