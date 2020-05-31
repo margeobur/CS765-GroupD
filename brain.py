@@ -10,17 +10,15 @@ class Mapping:
         if copy_me is None:
             self.randomise()
         else:
-            for i in range(0, self.n_points):
-                self.xs[i] = copy_me.xs[i]
-                self.ys[i] = copy_me.ys[i]
+            self.xs = copy_me.xs.copy()
+            self.ys = copy_me.ys.copy()
 
     def randomise(self):
-        for i in range(self.n_points):
-            self.xs[i] = random.randrange(0, 2)
-            self.ys[i] = random.randrange(-1, 2)
-
+        self.xs = [random.randrange(0, 2) for i in range(self.n_points)]
+        self.ys = [random.randrange(-1, 2) for i in range(self.n_points)]
         self.xs[0] = 0.0
         self.xs[self.n_points - 1] = 1.0
+        # TODO (Ernest): I believe xs and ys needs to be sorted via xs as required for interpolation
 
     def mutate(self):
         xs = self.xs
@@ -40,6 +38,7 @@ class Mapping:
                 xs[i] = random.randrange(0.0, 1.0)
                 ys[i] = random.randrange(-1.0, 1.0)
 
+        # TODO (Ernest): I believe this attempted sorting is insufficient.
         for i in range(i, n_points):
             if xs[i] > xs[i + 1]:
                 tmp = xs[i]
