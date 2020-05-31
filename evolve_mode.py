@@ -1,5 +1,7 @@
 import random
 from robot import Robot
+import simulation_state
+
 
 generation = 0
 tournament = 0
@@ -27,17 +29,17 @@ def iterate_evolve():
         random.randrange(0, pop_size)
 
     a = Robot()
-    a.set_brain(evolvable_brains[a_id])
-    a.set_environment(env)
-    b = robot()
-    b.set_brain(evolvable_brains[b_id])
-    b.set_environment(env)
+    a.set_brain(simulation_state.evolvable_brains[a_id])
+    a.set_environment(simulation_state.env)
+    b = Robot()
+    b.set_brain(simulation_state.evolvable_brains[b_id])
+    b.set_environment(simulation_state.env)
 
     a_fitness = 0
     b_fitness = 0
 
     for i in range(0, n_trials):
-        env.reset()
+        simulation_state.env.reset()
         a.reset()
         b.reset()
 
@@ -50,7 +52,7 @@ def iterate_evolve():
             b.calculate_change()
             b.update()
             b_fitness += (b.food_battery + a.water_battery) / 2.0 / trial_length
-        env.update()
+        simulation_state.env.update()
         if not a.is_alive and not b.is_alive:
             break
 
@@ -67,12 +69,14 @@ def iterate_evolve():
         winner_id = a_id
         loser_id = b_id
 
-    evolvable_brains[loser_id] = evolvable_brains[winner_id].imprint(evolvable_brains[loser_id])
+    simulation_state.evolvable_brains[loser_id] = \
+        simulation_state.evolvable_brains[winner_id].imprint(simulation_state.evolvable_brains[loser_id])
 
 
 def main():
+    global tournament
     tournament = 1
-    evolvable_brains = []
+    simulation_state.evolvable_brains = []
     iterate_evolve()
 
 
