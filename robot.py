@@ -77,10 +77,10 @@ class Robot:
 
 		sensor_to_thing = tuple(thing.x - (self.x + x * self.radius), t.y - (self.y + y * self.radius))
 		impact = (simulation_state.arena_width - sensor_to_thing.mag()) / simulation_state.arena_width
-		attentuation *= attentuation * attentuation
-		if attentuation < 0.0:
-			attentuation = 0.0
-		return impact * attentuation
+		attenuation *= attenuation * attenuation
+		if attenuation < 0.0:
+			attenuation = 0.0
+		return impact * attenuation
 
 	def calculate_change(self):
 		sense_vectors = []
