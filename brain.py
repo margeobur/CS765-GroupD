@@ -1,6 +1,7 @@
 import random
 import numpy
 
+
 class Mapping:
     def __init__(self, copy_me=None):
         self.n_points = 4

@@ -6,8 +6,10 @@ import math
 import numpy as np
 from maths import polar2vec
 
+
 # arena_width
 # timestep
+
 
 class Robot:
 	def __init__(self):

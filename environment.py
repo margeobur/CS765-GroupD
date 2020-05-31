@@ -3,14 +3,17 @@ import enum
 import numpy as np
 import simulation_state
 
+
 arena_width = 50
 # timestep
 # mode_evolve
+
 
 class ThingType(enum.Enum):
 	Food = 1
 	Water = 2
 	Trap = 3
+
 
 class Thing:
 	def __init__(self, ntype):

@@ -1,6 +1,7 @@
 import random
 import robot
 
+
 def iterate_evolve():
 	tournament+=1
 	a_id = random.randrange(0, population_size)
