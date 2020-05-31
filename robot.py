@@ -11,14 +11,12 @@ class Robot:
 		#radius of the robot
 		self.radius = 1
 
-		#what's this?
+		#Sensor angle
 		self.beta = 3.14159 / 4
 
-		#Robot's x, y position
+		#Robot's x, y position and heading angle
 		self.x = random.randrange(0, arena_width)
 		self.y = random.randrange(0, arena_width)
-
-		#?
 		self.a = random.randrange(0, 2.0*3.14159)
 
 		self.food_battery = 1.0
@@ -31,11 +29,9 @@ class Robot:
 		self.r = random.randrange(64, 192)
 		self.g = random.randrange(64, 192)
 		self.b = random.randrange(64, 192)
+		self.alpha = 128
 
 		self.is_alive = True
-
-		#?
-		self.alpha = 128
 
 		self.brain = Brain()
 		self.env = Environment()
