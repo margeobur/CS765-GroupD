@@ -60,8 +60,8 @@ class Environment:
 
         # create 4 food sources and 4 water sources
         for i in range(0, 4):
-            self.foods.append(ThingType.Food)
-            self.waters.append(ThingType.Water)
+            self.foods.append(Thing(ThingType.Food))
+            self.waters.append(Thing(ThingType.Water))
 
         # create 2 traps
         self.traps.append(Thing(ThingType.Trap))
