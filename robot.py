@@ -100,7 +100,7 @@ class Robot:
 				s = self.sense(sense_vectors[i], thing)
 				if s > raw_sensor_value:
 					raw_sensor_value = s
-			self.sense_values[0][i] = raw_sensor_value
+			self.sensor_values[0][i] = raw_sensor_value
 
 			raw_sensor_value = 0.0
 			for thing in self.env.waters:
@@ -114,4 +114,4 @@ class Robot:
 				s = self.sense(sense_vectors[i], thing)
 				if s > raw_sensor_value:
 					raw_sensor_value += s
-			self.sense_values[2][i] = raw_sensor_value
+			self.sensor_values[2][i] = raw_sensor_value
