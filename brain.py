@@ -105,7 +105,7 @@ class EvolvableBrain:
             for j in range(0, self.n_motors):
                 self.maps[i][j].randomise()
 
-    def imprint(self):
+    def imprint(self, loser):
         n_genes = self.maps[0][0].n_points*3*2
         copy = EvolvableBrain(loser)
 
