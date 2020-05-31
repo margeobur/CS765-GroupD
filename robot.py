@@ -43,8 +43,10 @@ class Robot:
 		self.sensor_values = tuple()
 
 	def reset(self):
-		self.x = random.uniform(0, simulation_state.arena_width)
-		self.y = random.uniform(0, simulation_state.arena_width)
+		self.position = np.array([
+			random.uniform(0, simulation_state.arena_width),
+			random.uniform(0, simulation_state.arena_width)
+		])
 
 		self.food_battery = 0.75
 		self.water_battery = 0.75
@@ -61,8 +63,7 @@ class Robot:
 		max_speed = 10.0
 
 		if self.is_alive:
-			self.x += simulation_state.timestep * np.cos(self.a) * (self.l_motor + self.r_motor) * max_speed
-			self.y += simulation_state.timestep * np.sin(self.a) * (self.l_motor + self.r_motor) * max_speed
+			self.position += simulation_state.timestep * polar2vec(self.a) * (self.l_motor + self.r_motor) * max_speed
 			self.a += simulation_state.timestep * max_speed * (self.l_motor - self.r_motor) / (2.0 * self.radius)
 
 			self.env.interact_with_robot()
