@@ -61,7 +61,7 @@ class Robot:
 		self.env = new_env
 
 	def update(self):
-		self.brain.iterate()
+		self.brain.iterate(self)
 		max_speed = 10.0
 
 		if self.is_alive:

@@ -57,9 +57,9 @@ class Mapping:
         ys = self.ys
         n_points = self.n_points
 
-        for i in range(0, n_points):
+        for i in range(0, n_points-1):
             if x <= xs[i + 1]:
-                output = numpy.interp(ys[i], ys[i + 1], x - xs[i] / xs[i + 1] - xs[i])
+                output = numpy.interp(ys[i], ys[i + 1], x - xs[i] / (xs[i + 1] - xs[i]))
                 return output
 
         print("non-interpolatable input: error")
