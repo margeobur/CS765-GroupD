@@ -18,16 +18,16 @@ class Robot:
 
 		#Robot's x, y position and heading angle
 		self.position = np.array([
-			random.randrange(0, simulation_state.arena_width),
-			random.randrange(0, simulation_state.arena_width)
+			random.uniform(0, simulation_state.arena_width),
+			random.uniform(0, simulation_state.arena_width)
 		])
-		self.a = random.randrange(0, 2.0*3.14159)
+		self.a = random.uniform(0, 2.0*3.14159)
 
 		self.food_battery = 1.0
 		self.water_battery = 1.0
 
-		self.l_motor = random.randrange(0,1)
-		self.r_motor = random.randrange(0,1)
+		self.l_motor = random.uniform(0, 1)
+		self.r_motor = random.uniform(0, 1)
 
 		#sense colours
 		self.r = random.randrange(64, 192)
@@ -42,8 +42,8 @@ class Robot:
 		self.sensor_values = tuple()
 
 	def reset(self):
-		self.x = random.randrange(0, simulation_state.arena_width)
-		self.y = random.randrange(0, simulation_state.arena_width)
+		self.x = random.uniform(0, simulation_state.arena_width)
+		self.y = random.uniform(0, simulation_state.arena_width)
 
 		self.food_battery = 0.75
 		self.water_battery = 0.75
