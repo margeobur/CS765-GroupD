@@ -20,18 +20,6 @@ class Thing:
 
 		self.type = ntype
 
-		if type == ThingType.Food:
-			food_xs.add(self.x)
-			food_ys.add(self.y)
-
-		elif type == ThingType.Water:
-			water_xs.add(self.x)
-			water_ys.add(self.y)
-
-		elif type == ThingType.Trap:
-			trap_xs.add(self.x)
-			trap_ys.add(self.y)
-
 	# def __init__(self, nx, ny, ntype):
 	# 	self.x = nx
 	# 	self.y = ny
@@ -51,15 +39,6 @@ class Thing:
 			self.x = random.randrange(0, arena_width)
 			self.y = random.randrange(0, arena_width)
 
-			if type == ThingType.Food:
-				self.food_xs.append(self.x)
-				self.food_ys.append(self.y)
-			elif type == ThingType.Water:
-				self.water_xs.append(self.x)
-				self.water_ys.append(self.y)
-			elif type == ThingType.Trap:
-				self.trap_ys.append(self.x)
-				self.trap_ys.append(self.y)
 
 class Environment:
 
