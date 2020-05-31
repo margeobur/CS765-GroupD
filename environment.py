@@ -29,11 +29,11 @@ class Thing:
 	# 	self.amount = 1.0
 	# 	self.radius = 1.0
 
-	def draw():
+	def draw(self):
 		#
 		return True
 
-	def update():
+	def update(self):
 		if self.amount < 0.0:
 			self.amount = 1.0
 			self.x = random.randrange(0, arena_width)
@@ -56,7 +56,7 @@ class Environment:
 		self.traps.append(Thing(ThingType.Trap))
 		self.traps.append(Thing(ThingType.Trap))
 
-	def reset():
+	def reset(self):
 		for thing in self.foods:
 			thing.amount = -1.0
 			thing.update()
@@ -67,7 +67,7 @@ class Environment:
 			thing.amount = -1.0
 			thing.update()
 
-	def interact_with_robot(robot):
+	def interact_with_robot(self, robot):
 		consumption_rate = 0.25 * 10.0
 		fill_rate = 0.25
 		#draw stroke here
@@ -91,7 +91,7 @@ class Environment:
 				robot.is_alive = False
 
 
-	def update():
+	def update(self):
 		for thing in self.foods:
 			thing.update()
 		for thing in self.waters:
@@ -99,6 +99,6 @@ class Environment:
 		for thing in self.traps:
 			thing.update()
 
-	def draw():
+	def draw(self):
 		#draw stuff
 		return True
