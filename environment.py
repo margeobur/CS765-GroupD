@@ -1,6 +1,7 @@
 import random
 import enum
 import numpy as np
+import simulation_state
 
 arena_width = 50
 # timestep
@@ -79,14 +80,14 @@ class Environment:
 
 		for thing in self.foods:
 			if np.linalg.norm(thing.position - robot.position) < thing.radius:
-				thing.amount -= consumption_rate * timestep
-				robot.food_battery += fill_rate * timestep
+				thing.amount -= consumption_rate * simulation_state.timestep
+				robot.food_battery += fill_rate * simulation_state.timestep
 
 
 		for thing in self.waters:
 			if np.linalg.norm(thing.position - robot.position) < thing.radius:
-				thing.amount -= consumption_rate * timestep
-				robot.water_battery += fill_rate * timestep
+				thing.amount -= consumption_rate * simulation_state.timestep
+				robot.water_battery += fill_rate * simulation_state.timestep
 
 
 		for thing in self.traps:
