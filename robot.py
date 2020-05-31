@@ -74,7 +74,7 @@ class Robot:
 			self.water_battery = 0.0
 
 	def sense(self, sense_vector, thing):
-		sensor_to_thing = thing - (self.position + sense_vector * self.radius)
+		sensor_to_thing = thing.position - (self.position + sense_vector * self.radius)
 		sensor_to_thing_magnitude = np.linalg.norm(sensor_to_thing)
 		impact = (simulation_state.arena_width - sensor_to_thing_magnitude) / simulation_state.arena_width
 		attenuation = np.dot(sense_vector, sensor_to_thing / sensor_to_thing_magnitude)
