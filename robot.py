@@ -42,7 +42,7 @@ class Robot:
 
 		self.brain = EvolvableBrain()
 		self.env = Environment()
-		self.sensor_values = tuple()
+		self.sensor_values = [[0] * 2] * 3
 
 	def reset(self):
 		self.position = np.array([
@@ -94,7 +94,7 @@ class Robot:
 		sense_vectors = [polar2vec(self.a - self.beta), polar2vec(self.a + self.beta)]
 
 		raw_sensor_value = 0.0
-		for i in range(0, len(sense_vectors) + 1):
+		for i in range(0, len(sense_vectors)):
 			raw_sensor_value = 0.0
 			for thing in self.env.foods:
 				s = self.sense(sense_vectors[i], thing)
