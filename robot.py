@@ -4,6 +4,7 @@ import random
 import simulation_state
 import math
 import numpy as np
+from maths import polar2vec
 
 # arena_width
 # timestep
@@ -87,8 +88,7 @@ class Robot:
 		return impact * attenuation
 
 	def calculate_change(self):
-		sense_vectors = [np.array([np.cos(self.a - self.beta), np.sin(self.a - self.beta)]),
-						 np.array([np.cos(self.a + self.beta), np.sin(self.a + self.beta)])]
+		sense_vectors = [polar2vec(self.a - self.beta), polar2vec(self.a + self.beta)]
 
 		raw_sensor_value = 0.0
 		for i in range(0, len(sense_vectors) + 1):
