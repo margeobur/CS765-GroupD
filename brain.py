@@ -1,6 +1,6 @@
 import random
 import numpy
-
+import turtle
 
 class Mapping:
     def __init__(self, copy_me=None):
@@ -83,8 +83,11 @@ class Mapping:
 
     def draw(self):
         for i in range(0, self.n_points):
-            #draw line
-            return True
+            turtle.penup()
+            turtle.goto(self.xs[i], -self.ys[i])
+            turtle.pendown()
+            turtle.goto(self.xs[i + 1], -self.ys[i + 1])
+            turtle.done()
 
 class EvolvableBrain:
     def __init__(self, copy_me=None):
