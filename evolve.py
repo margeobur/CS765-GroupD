@@ -1,14 +1,15 @@
 import random
 import robot
+import simulation_state
 
 
 def iterate_evolve():
 	tournament+=1
-	a_id = random.randrange(0, population_size)
-	b_id = random.randrange(0, population_size)
+	a_id = random.randrange(0, simulation_state.pop_size)
+	b_id = random.randrange(0, simulation_state.pop_size)
 
 	while (a_id == b_id):
-		random.randrange(0, population_size)
+		random.randrange(0, simulation_state.pop_size)
 
 	print(a_id, b_id)
 

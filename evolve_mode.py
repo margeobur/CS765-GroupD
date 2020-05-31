@@ -2,10 +2,8 @@ import random
 from robot import Robot
 import simulation_state
 
-
 generation = 0
 tournament = 0
-pop_size = 50
 
 trial_length = 1500
 n_trials = 1
@@ -19,14 +17,13 @@ peak_fitness_history = []
 def iterate_evolve():
     global generation
     global tournament
-    global pop_size
 
     tournament += 1
-    a_id = random.randrange(0, pop_size)
-    b_id = random.randrange(0, pop_size)
+    a_id = random.randrange(0, simulation_state.pop_size)
+    b_id = random.randrange(0, simulation_state.pop_size)
 
     while (a_id == b_id):
-        random.randrange(0, pop_size)
+        random.randrange(0, simulation_state.pop_size)
 
     a = Robot()
     a.set_brain(simulation_state.evolvable_brains[a_id])
