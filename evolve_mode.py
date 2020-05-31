@@ -22,7 +22,7 @@ def iterate_evolve():
     a_id = random.randrange(0, simulation_state.pop_size)
     b_id = random.randrange(0, simulation_state.pop_size)
 
-    while (a_id == b_id):
+    while a_id == b_id:
         random.randrange(0, simulation_state.pop_size)
 
     a = Robot()
@@ -73,8 +73,5 @@ def iterate_evolve():
 def main():
     global tournament
     tournament = 1
-    simulation_state.evolvable_brains = []
     iterate_evolve()
 
-
-main()
