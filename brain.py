@@ -15,8 +15,8 @@ class Mapping:
             self.ys = copy_me.ys.copy()
 
     def randomise(self):
-        self.xs = [random.randrange(0, 2) for i in range(self.n_points)]
-        self.ys = [random.randrange(-1, 2) for i in range(self.n_points)]
+        self.xs = [random.uniform(0, 2) for i in range(self.n_points)]
+        self.ys = [random.uniform(-1, 2) for i in range(self.n_points)]
         self.xs[0] = 0.0
         self.xs[self.n_points - 1] = 1.0
         # TODO (Ernest): I believe xs and ys needs to be sorted via xs as required for interpolation
@@ -35,12 +35,12 @@ class Mapping:
             xs[i] = numpy.clip(xs[i], 0.0, 1.0)
             ys[i] = numpy.clip(ys[i], -1.0, 1.0)
 
-            if random.randrange(0, 1.0) < mu_2:
-                xs[i] = random.randrange(0.0, 1.0)
-                ys[i] = random.randrange(-1.0, 1.0)
+            if random.uniform(0.0, 1.0) < mu_2:
+                xs[i] = random.uniform(0.0, 1.0)
+                ys[i] = random.uniform(-1.0, 1.0)
 
         # TODO (Ernest): I believe this attempted sorting is insufficient.
-        for i in range(i, n_points):
+        for i in range(0, n_points):
             if xs[i] > xs[i + 1]:
                 tmp = xs[i]
                 xs[i] = xs[i + 1]
@@ -59,7 +59,7 @@ class Mapping:
 
         for i in range(0, n_points-1):
             if x <= xs[i + 1]:
-                output = numpy.interp(ys[i], ys[i + 1], x - xs[i] / (xs[i + 1] - xs[i]))
+                output = ys[i] + (x - xs[i]) * (ys[i + 1] - ys[i])/(xs[i + 1] - xs[i])
                 return output
 
         print("non-interpolatable input: error")
@@ -115,7 +115,7 @@ class EvolvableBrain:
 
         for i in range(0, self.n_senses):
             for j in range(0, self.n_motors):
-                if random.randrange(0, 1.0) < 0.5:
+                if random.uniform(0.0, 1.0) < 0.5:
                     copy.self.maps[i][j] = Mapping(self.maps[i][j])
                 copy.self.maps[i][j].mutate()
         return copy

@@ -68,7 +68,7 @@ class Robot:
 			self.position += simulation_state.timestep * polar2vec(self.a) * (self.l_motor + self.r_motor) * max_speed
 			self.a += simulation_state.timestep * max_speed * (self.l_motor - self.r_motor) / (2.0 * self.radius)
 
-			self.env.interact_with_robot()
+			self.env.interact_with_robot(self)
 			self.food_battery = np.clip(self.food_battery - 0.04 * simulation_state.timestep, 0.0, 1.0)
 			self.water_battery = np.clip(self.food_battery - 0.04 * simulation_state.timestep, 0.0, 1.0)
 
