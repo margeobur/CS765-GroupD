@@ -28,19 +28,18 @@ class Thing:
     def draw(self):
         # alpha = int(180 * self.amount)
         # Not sure the above line is needed anymore.
+        t = turtle.Turtle()
         if self.type == ThingType.Food:
-            turtle.fillcolor("yellow")
+            t.fillcolor("yellow")
         elif self.type == ThingType.Water:
-            turtle.fillcolor("blue")
+            t.fillcolor("blue")
         else:
-            turtle.fillcolor("red")
-        turtle.penup()
-        turtle.goto(self.position[0], self.position[1])
-        turtle.pendown()
-        turtle.shape("circle")
-        turtle.shapesize(self.radius * 2, self.radius * 2)
-        turtle.done()
-        return True
+            t.fillcolor("red")
+        t.penup()
+        t.goto(self.position[0], self.position[1])
+        t.pendown()
+        t.shape("circle")
+        t.shapesize(self.radius * 2, self.radius * 2)
 
     def update(self):
         if self.amount < 0.0:
@@ -108,9 +107,15 @@ class Environment:
             thing.update()
 
     def draw(self):
+        win = turtle.Screen()
+        win.setup(simulation_state.arena_width, simulation_state.arena_width)
+        win.setworldcoordinates(0, 0, simulation_state.arena_width, simulation_state.arena_width)
+        win.bgcolor("black")
+        win.title("Arena")
         for f in self.foods:
             f.draw()
         for w in self.waters:
             w.draw()
         for t in self.traps:
             t.draw()
+        win.mainloop()
