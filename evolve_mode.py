@@ -7,7 +7,7 @@ tournament = 0
 
 trial_length = 1500
 n_trials = 1
-fitnesses = []
+fitnesses = [0] * simulation_state.pop_size
 history_size = 500
 
 mean_fitness_history = []

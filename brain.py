@@ -116,8 +116,8 @@ class EvolvableBrain:
         for i in range(0, self.n_senses):
             for j in range(0, self.n_motors):
                 if random.uniform(0.0, 1.0) < 0.5:
-                    copy.self.maps[i][j] = Mapping(self.maps[i][j])
-                copy.self.maps[i][j].mutate()
+                    copy.maps[i][j] = Mapping(self.maps[i][j])
+                copy.maps[i][j].mutate()
         return copy
 
     def iterate(self, robot):
