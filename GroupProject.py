@@ -20,7 +20,6 @@ def setup():
         simulation_state.robots.append(r)
 
 def main():
-    # user_input = input("Press Enter to start")
     setup()
     evolve_mode.main()
 
