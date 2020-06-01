@@ -27,7 +27,7 @@ class Thing:
 
     def draw(self):
         # alpha = int(180 * self.amount)
-        # Note sure the above line is needed anymore.
+        # Not sure the above line is needed anymore.
         if self.type == ThingType.Food:
             turtle.fillcolor("yellow")
         elif self.type == ThingType.Water:
