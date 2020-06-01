@@ -21,6 +21,7 @@ def setup():
 
 def main():
     setup()
+    simulation_state.env.draw()
     evolve_mode.main()
 
 

@@ -28,14 +28,14 @@ class Thing:
     def draw(self):
         # alpha = int(180 * self.amount)
         # Note sure the above line is needed anymore.
-        if type == ThingType.FOOD:
-            turtle.fillcolour("yellow")
-        elif type == ThingType.WATER:
+        if self.type == ThingType.Food:
+            turtle.fillcolor("yellow")
+        elif self.type == ThingType.Water:
             turtle.fillcolor("blue")
         else:
             turtle.fillcolor("red")
         turtle.penup()
-        turtle.goto(self.x, self.y)
+        turtle.goto(self.position[0], self.position[1])
         turtle.pendown()
         turtle.shape("circle")
         turtle.shapesize(self.radius * 2, self.radius * 2)
