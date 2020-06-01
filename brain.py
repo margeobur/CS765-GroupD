@@ -28,9 +28,10 @@ class Mapping:
 
         mu_1 = 0.01
         mu_2 = 0.02
+        sigma = 0.01
         for i in range(0, self.n_points):
-            xs[i] += random.gauss() * mu_1
-            ys[i] += random.gauss() * mu_2
+            xs[i] += random.gauss(mu_1, sigma)
+            ys[i] += random.gauss(mu_2, sigma)
 
             xs[i] = numpy.clip(xs[i], 0.0, 1.0)
             ys[i] = numpy.clip(ys[i], -1.0, 1.0)
@@ -40,7 +41,7 @@ class Mapping:
                 ys[i] = random.uniform(-1.0, 1.0)
 
         # TODO (Ernest): I believe this attempted sorting is insufficient.
-        for i in range(0, n_points):
+        for i in range(0, n_points - 1):
             if xs[i] > xs[i + 1]:
                 tmp = xs[i]
                 xs[i] = xs[i + 1]
