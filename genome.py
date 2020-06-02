@@ -304,6 +304,12 @@ def run_examples():
     robot_genome.randomise()
     print_state("Randomised")
 
+    environment_genome.mutate()
+    robot_genome.mutate()
+    print_state("Mutated")
+
+    print("Examples have finished executing. Please manually inspect the output above for correctness.")
+
 
 if __name__ == "__main__":
     run_examples()
