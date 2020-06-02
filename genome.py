@@ -36,6 +36,11 @@ class Genetic:
             else:
                 self[key] = source[key]
 
+    def print(self, indent=0):
+        for key in self:
+            print(" " * indent + "- " + key)
+            self[key].print(indent + 1)
+
 
 class FloatGene(Genetic):
     def __init__(self, mutation_args=None, randomise_probability=0.001,
@@ -64,6 +69,9 @@ class FloatGene(Genetic):
         if random.random() < self.crossoverProbability:
             self.value = source.value
         self.__normalise()
+
+    def print(self, indent=0):
+        print(" " * indent + " = " + self.value)
 
     def __normalise(self):
         if self.wrap:
@@ -229,6 +237,9 @@ class LateralityGene(Genetic):
     def crossover(self, source):
         if random.random() < self.crossoverProbability:
             self.laterality = source.laterality
+
+    def print(self, indent=0):
+        print(" " * indent + " = " + self.laterality.name)
 
 
 class EnvironmentGenome(Genetic):
