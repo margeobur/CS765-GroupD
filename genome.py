@@ -287,16 +287,18 @@ def run_examples():
     environment_genome = EnvironmentGenome()
     robot_genome = RobotGenome()
 
-    def print_state():
+    def print_state(header):
+        print(f"\n{header}\n{'=' * len(header)}\n")
         print("environment_genome:")
         print(environment_genome.dump())
         print("robot_genome:")
         print(robot_genome.dump())
 
-    print_state()
+    print_state("Initial")
+
     environment_genome.randomise()
     robot_genome.randomise()
-    print_state()
+    print_state("Randomised")
 
 
 if __name__ == "__main__":
