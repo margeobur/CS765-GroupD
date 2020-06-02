@@ -104,7 +104,9 @@ class SmellSignatureGene(ListGene):
 
 class DynamicListGene(ListGene):
     def __init__(self, element_class, addition_probability=0.001, removal_probability=0.001,
-                 init_size_range=(0, 10), init_list=[]):
+                 init_size_range=(0, 10), init_list=None):
+        if init_list is None:
+            init_list = []
         self.elementClass = element_class
         self.additionProbability = addition_probability
         self.removalProbability = removal_probability
