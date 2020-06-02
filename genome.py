@@ -158,6 +158,7 @@ class DynamicListGene(ListGene):
 
 class PiecemealPoint(Genetic):
     def __init__(self, point_to_copy=None):
+        super().__init__()
         self.x = FloatGene()
         self.y = FloatGene()
         if point_to_copy is not None:
