@@ -107,15 +107,9 @@ class Environment:
             thing.update()
 
     def draw(self):
-        win = turtle.Screen()
-        win.setup(simulation_state.arena_width, simulation_state.arena_width)
-        win.setworldcoordinates(0, 0, simulation_state.arena_width, simulation_state.arena_width)
-        win.bgcolor("black")
-        win.title("Arena")
         for f in self.foods:
             f.draw()
         for w in self.waters:
             w.draw()
         for t in self.traps:
             t.draw()
-        win.mainloop()

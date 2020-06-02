@@ -3,7 +3,7 @@ import evolve_mode
 from robot import Robot
 from environment import Environment
 from brain import EvolvableBrain
-
+import turtle
 
 def setup():
     simulation_state.env = Environment()
@@ -21,8 +21,14 @@ def setup():
 
 def main():
     setup()
+    win = turtle.Screen()
+    win.setup(simulation_state.arena_width, simulation_state.arena_width)
+    win.setworldcoordinates(0, 0, simulation_state.arena_width, simulation_state.arena_width)
+    win.bgcolor("black")
+    win.title("Arena")
     simulation_state.env.draw()
     evolve_mode.main()
+    win.mainloop()
 
 
 main()

@@ -28,6 +28,7 @@ def iterate_evolve():
     a = Robot()
     a.set_brain(simulation_state.evolvable_brains[a_id])
     a.set_environment(simulation_state.env)
+    a.draw()
     b = Robot()
     b.set_brain(simulation_state.evolvable_brains[b_id])
     b.set_environment(simulation_state.env)
