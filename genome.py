@@ -130,7 +130,7 @@ class DynamicListGene(ListGene):
         super().__setitem__(key, value)
 
     def randomise(self):
-        self.list = [self.elementClass() for _ in range(random.uniform(*self.initSizeRange))]
+        self.list = [self.elementClass() for _ in range(random.randrange(*self.initSizeRange))]
         super().randomise()
 
     def mutate(self):
