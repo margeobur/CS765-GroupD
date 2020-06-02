@@ -272,3 +272,23 @@ class RobotGenome(Genetic):
     def __init__(self):
         super().__init__()
         self.sensors = DynamicListGene(SensorGene)
+
+
+def run_examples():
+    environment_genome = EnvironmentGenome()
+    robot_genome = RobotGenome()
+
+    def print_state():
+        print("environment_genome:")
+        environment_genome.print()
+        print("robot_genome:")
+        robot_genome.print()
+
+    print_state()
+    environment_genome.randomise()
+    robot_genome.randomise()
+    print_state()
+
+
+if __name__ == "__main__":
+    run_examples()
