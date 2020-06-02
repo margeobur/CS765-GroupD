@@ -36,10 +36,19 @@ class Genetic:
             else:
                 self[key] = source[key]
 
-    def print(self, indent=0):
+    def dump(self, indent=0):
+        message = ""
+        first_indent_ignored = False
         for key in self:
-            print(" " * indent + "- " + key)
-            self[key].print(indent + 1)
+            line = f" -> {key}"
+            if first_indent_ignored:
+                message += " " * indent
+            first_indent_ignored = True
+            message += line
+            message += self[key].dump(indent + len(line))
+            if message[-1] != "\n":
+                message += "\n"
+        return message
 
 
 class FloatGene(Genetic):
@@ -70,8 +79,8 @@ class FloatGene(Genetic):
             self.value = source.value
         self.__normalise()
 
-    def print(self, indent=0):
-        print(" " * indent + " = " + self.value)
+    def dump(self, indent=0):
+        return f" = {self.value}"
 
     def __normalise(self):
         if self.wrap:
@@ -238,8 +247,8 @@ class LateralityGene(Genetic):
         if random.random() < self.crossoverProbability:
             self.laterality = source.laterality
 
-    def print(self, indent=0):
-        print(" " * indent + " = " + self.laterality.name)
+    def dump(self, indent=0):
+        return f" = {self.laterality.name}"
 
 
 class EnvironmentGenome(Genetic):
@@ -280,9 +289,9 @@ def run_examples():
 
     def print_state():
         print("environment_genome:")
-        environment_genome.print()
+        print(environment_genome.dump())
         print("robot_genome:")
-        robot_genome.print()
+        print(robot_genome.dump())
 
     print_state()
     environment_genome.randomise()
