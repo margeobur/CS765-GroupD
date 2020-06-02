@@ -33,13 +33,14 @@ class Genetic:
 
 
 class FloatGene(Genetic):
-    def __init__(self, mutation_args=None, crossover_rate=0.5, bounds=(0, 1), wrap=False):
+    def __init__(self, mutation_args=None, randomise_probability=0.001, crossover_probability=0.5, bounds=(0, 1), wrap=False):
         super().__init__()
         if mutation_args is None:
             mutation_args = {"mu": 0.0, "sigma": 0.01}
         self.value = 0.0
         self.mutationArgs = mutation_args
-        self.crossoverRate = crossover_rate
+        self.randomiseProbability = randomise_probability
+        self.crossoverProbability = crossover_probability
         self.bounds = bounds
         self.wrap = wrap
         self.randomise()
@@ -49,10 +50,12 @@ class FloatGene(Genetic):
 
     def mutate(self):
         self.value += random.gauss(**self.mutationArgs)
+        if random.random() < self.randomiseProbability:
+            self.randomise()
         self.__normalise()
 
     def crossover(self, source):
-        if random.random() < self.crossoverRate:
+        if random.random() < self.crossoverProbability:
             self.value = source.value
         self.__normalise()
 
