@@ -191,6 +191,10 @@ class PiecemealMappingGene(DynamicListGene):
         super().__init__(element_class=PiecemealPoint, init_size_range=(2, 5))
         self.randomise()
 
+    def randomise(self):
+        super().randomise()
+        self.__normalise()
+
     def mutate(self):
         super().mutate()
         self.__normalise()
@@ -202,11 +206,11 @@ class PiecemealMappingGene(DynamicListGene):
                 self.list.append(PiecemealPoint(point))
 
     def __normalise(self):
-        self.list.sort(key=attrgetter('x'))
+        self.list.sort(key=attrgetter('x.value'))
         if len(self.list) < 2:
             self.list += [PiecemealPoint() for _ in range(2 - len(self.list))]
-        self.list[0].x = 0.0
-        self.list[-1].x = 0.0
+        self.list[0].x.value = 0.0
+        self.list[-1].x.value = 1.0
 
 
 class ThingGene(Genetic):
