@@ -3,6 +3,7 @@ import random
 from operator import attrgetter
 import itertools
 from enum import Enum
+import typing
 
 import numpy as np
 
@@ -37,7 +38,8 @@ class Genetic:
 
 
 class FloatGene(Genetic):
-    def __init__(self, mutation_args=None, randomise_probability=0.001, crossover_probability=0.5, bounds=(0, 1), wrap=False):
+    def __init__(self, mutation_args=None, randomise_probability=0.001,
+                 crossover_probability=0.5, bounds=(0, 1), wrap=False):
         super().__init__()
         if mutation_args is None:
             mutation_args = {"mu": 0.0, "sigma": 0.01}
@@ -203,6 +205,10 @@ class ThingGene(Genetic):
 class Laterality(Enum):
     LEFT = 1
     RIGHT = 2
+
+
+# Enums are iterable. Suppress pycharm warnings by hinting it:
+Laterality = Laterality  # type: typing.Union[typing.Type[Laterality], typing.Iterable]
 
 
 class LateralityGene(Genetic):
