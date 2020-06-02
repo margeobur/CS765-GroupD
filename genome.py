@@ -114,7 +114,8 @@ class DynamicListGene(ListGene):
         if random.random() < self.additionProbability:
             self.list.pop(random.randrange(0, len(self.list)))
         if random.random() < self.additionProbability:
-            self.list.insert(random.randrange(0, len(self.list)), self.elementClass())
+            # Note: Using randint to allow appending after last element.
+            self.list.insert(random.randint(0, len(self.list)), self.elementClass())
 
     # TODO: Cross over alignment / pairing
     def crossover(self, source):
