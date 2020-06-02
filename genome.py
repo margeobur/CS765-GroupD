@@ -1,5 +1,7 @@
 import math
 import random
+from operator import attrgetter
+
 import numpy as np
 
 
@@ -123,14 +125,18 @@ class DynamicListGene(ListGene):
 
 
 class PiecemealPoint(Genetic):
-    def __init__(self):
+    def __init__(self, point_to_copy=None):
         self.x = FloatGene()
         self.y = FloatGene()
+        if point_to_copy is not None:
+            self.x.value = point_to_copy.x.value
+            self.y.value = point_to_copy.y.value
 
 
 class PiecemealMappingGene(DynamicListGene):
-    def __init__(self):
-        super().__init__(PiecemealPoint)
+    def __init__(self, crossover_probability=0.01):
+        self.crossoverProbability = crossover_probability
+        super().__init__(element_class=PiecemealPoint, init_size_range=(2, 5))
         self.randomise()
 
     def mutate(self):
@@ -138,13 +144,17 @@ class PiecemealMappingGene(DynamicListGene):
         self.__normalise()
 
     def crossover(self, source):
-        super().crossover(source)
-        self.__normalise()
-        # TODO: Crossover granularity
+        if random.random() < self.crossoverProbability:
+            self.list = []
+            for point in source.list:
+                self.list.append(PiecemealPoint(point))
 
     def __normalise(self):
-        # TODO: sort by x and ensure first and last are 0.0 and 1.0
-        pass
+        self.list.sort(key=attrgetter('x'))
+        if len(self.list) < 2:
+            self.list += [PiecemealPoint(), PiecemealPoint()]
+        self.list[0].x = 0.0
+        self.list[-1].x = 0.0
 
 
 class ThingGene(Genetic):
