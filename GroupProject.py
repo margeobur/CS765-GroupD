@@ -26,6 +26,7 @@ def main():
     win.setworldcoordinates(0, 0, simulation_state.arena_width, simulation_state.arena_width)
     win.bgcolor("black")
     win.title("Arena")
+    win.colormode(255)
     simulation_state.env.draw()
     evolve_mode.main()
     win.mainloop()

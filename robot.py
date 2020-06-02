@@ -118,15 +118,13 @@ class Robot:
 			self.sensor_values[2][i] = raw_sensor_value
 
 	def draw(self):
-		#colour_mode
 		alpha = 127
 		t = turtle.Turtle()
 		if self.is_alive:
 			alpha = 255
-		t.fillcolor("green")
-		#t.fillcolor(64, 64, 64)
-		# t.pensize(0.125)
-		# t.pencolor('255, 255, 255')
+		t.fillcolor(64, 64, 64)
+		t.pensize(0.125)
+		t.pencolor(255, 255, 255)
 		gx = self.position[0]
 		gy = self.position[1]
 		t.penup()
@@ -134,15 +132,11 @@ class Robot:
 		t.pendown()
 		t.shape("circle")
 		t.shapesize(self.radius*2, self.radius*2)
-		hx = math.cos(self.a) * self.radius
-		hy = math.sin(self.a) * self.radius
-		t.penup()
-		t.goto(gx, gy)
-		t.pendown()
-		t.goto(gx+hx, gy+hy)
-
-		# r = 1.95 * self.radius
-		# t.fillcolor(60, 255, 60)
-		#
+		# hx = math.cos(self.a) * self.radius
+		# hy = math.sin(self.a) * self.radius
+		# t.penup()
+		# t.goto(gx, gy)
+		# t.pendown()
+		# t.goto(gx+hx, gy+hy)
 
 

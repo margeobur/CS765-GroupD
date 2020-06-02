@@ -32,6 +32,7 @@ def iterate_evolve():
     b = Robot()
     b.set_brain(simulation_state.evolvable_brains[b_id])
     b.set_environment(simulation_state.env)
+    b.draw()
 
     a_fitness = 0
     b_fitness = 0
