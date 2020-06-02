@@ -181,7 +181,7 @@ class PiecemealMappingGene(DynamicListGene):
     def __normalise(self):
         self.list.sort(key=attrgetter('x'))
         if len(self.list) < 2:
-            self.list += [PiecemealPoint(), PiecemealPoint()]
+            self.list += [PiecemealPoint() for _ in range(2 - len(self.list))]
         self.list[0].x = 0.0
         self.list[-1].x = 0.0
 
