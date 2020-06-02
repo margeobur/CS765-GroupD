@@ -88,7 +88,7 @@ class ListGene(Genetic):
         self.list = []
 
     def __iter__(self):
-        return range(len(self.list))
+        return iter(range(len(self.list)))
 
     def __getitem__(self, item):
         return self.list[item]
