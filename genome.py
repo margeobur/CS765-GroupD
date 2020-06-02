@@ -308,6 +308,19 @@ def run_examples():
     robot_genome.mutate()
     print_state("Mutated")
 
+    environment_genome2 = EnvironmentGenome()
+    robot_genome2 = RobotGenome()
+
+    environment_genome.crossover(environment_genome2)
+    robot_genome.crossover(robot_genome2)
+    print_state("Crossovered with new initial genomes")
+
+    environment_genome2.randomise()
+    robot_genome2.randomise()
+    environment_genome.crossover(environment_genome2)
+    robot_genome.crossover(robot_genome2)
+    print_state("Crossovered with new randomised genomes")
+
     print("Examples have finished executing. Please manually inspect the output above for correctness.")
 
 
