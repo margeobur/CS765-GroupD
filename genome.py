@@ -2,6 +2,7 @@ import math
 import random
 from operator import attrgetter
 import itertools
+from enum import Enum
 
 import numpy as np
 
@@ -196,6 +197,31 @@ class ThingGene(Genetic):
         return self.smellSignature.incompatibility_with(other_thing.smellSignature)
 
 
+class Laterality(Enum):
+    LEFT = 1
+    RIGHT = 2
+
+
+class LateralityGene(Genetic):
+    def __init__(self, randomise_probability=0.001, crossover_probability=0.001):
+        self.laterality = Laterality.LEFT
+        self.randomiseProbability = randomise_probability
+        self.crossoverProbability = crossover_probability
+        super().__init__()
+        self.randomise()
+
+    def randomise(self):
+        self.laterality = random.choice(list(Laterality))
+
+    def mutate(self):
+        if random.random() < self.randomiseProbability:
+            self.randomise()
+
+    def crossover(self, source):
+        if random.random() < self.crossoverProbability:
+            self.laterality = source.laterality
+
+
 class EnvironmentGenome(Genetic):
     def __init__(self):
         super().__init__()
@@ -207,9 +233,16 @@ class EnvironmentGenome(Genetic):
 class SensorGene(Genetic):
     def __init__(self):
         super().__init__()
+
+        # Either
         self.threshold = FloatGene()
+        # or
+        self.mapping = PiecemealMappingGene()
+
         self.angle = FloatGene(bounds=(0.0, 2.0 * math.pi), wrap=True)
         self.smellSignature = SmellSignatureGene()
+
+        self.motorSide = LateralityGene()
 
     def incompatibility_with(self, other_sensor):
         return self.smellSignature.incompatibility_with(other_sensor.smellSignature)
