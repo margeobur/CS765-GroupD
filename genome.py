@@ -102,7 +102,7 @@ class DynamicListGene(ListGene):
 
     def __setitem__(self, key, value):
         if key >= len(self.list):
-            self.list += [self.elementClass for _ in range(len(self.list), key + 1)]
+            self.list += [self.elementClass() for _ in range(len(self.list), key + 1)]
         super().__setitem__(key, value)
 
     def randomise(self):
