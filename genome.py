@@ -1,5 +1,8 @@
 import math
 import random
+from operator import attrgetter
+import itertools
+
 import numpy as np
 
 
@@ -91,14 +94,22 @@ class SmellSignatureGene(ListGene):
         super().__init__()
         self.list = [FloatGene(bounds=(-1.0, 1.0)) for _ in range(SIGNATURE_NUM_DIMENSIONS)]
 
+    def incompatibility_with(self, other_smell_signature):
+        euclidean_distance_squared = 0
+        for i in range(SIGNATURE_NUM_DIMENSIONS):
+            euclidean_distance_squared += (self.list[i].value - other_smell_signature.list[i].value) ** 2
+        return euclidean_distance_squared
+
 
 class DynamicListGene(ListGene):
-    def __init__(self, element_class, addition_probability=0.001, removal_probability=0.001, init_size_range=(0, 10)):
+    def __init__(self, element_class, addition_probability=0.001, removal_probability=0.001,
+                 init_size_range=(0, 10), init_list=[]):
         self.elementClass = element_class
         self.additionProbability = addition_probability
         self.removalProbability = removal_probability
         self.initSizeRange = init_size_range
         super().__init__()
+        self.list = init_list
 
     def __setitem__(self, key, value):
         if key >= len(self.list):
@@ -117,20 +128,44 @@ class DynamicListGene(ListGene):
             # Note: Using randint to allow appending after last element.
             self.list.insert(random.randint(0, len(self.list)), self.elementClass())
 
-    # TODO: Cross over alignment / pairing
     def crossover(self, source):
-        super().crossover(source)
+        best_permutation = None
+        min_incompatibility = math.inf
+        for source_permutation in source.permutations():
+            incompatibility = self.incompatibility_with(source_permutation) < min_incompatibility
+            if incompatibility < min_incompatibility:
+                best_permutation = source_permutation
+                min_incompatibility = incompatibility
+        super().crossover(best_permutation)
+
+    def incompatibility_with(self, other_dynamic_list):
+        incompatibility = 0
+        for (ours, theirs) in zip(self.list, other_dynamic_list.list):
+            incompatibility += ours.incompatibility_with(theirs)
+        return incompatibility
+
+    def permutations(self):
+        for list_permutation in itertools.permutations(self.list):
+            yield DynamicListGene(element_class=self.elementClass,
+                                  addition_probability=self.additionProbability,
+                                  removal_probability=self.removalProbability,
+                                  init_size_range=self.initSizeRange,
+                                  init_list=list_permutation)
 
 
 class PiecemealPoint(Genetic):
-    def __init__(self):
+    def __init__(self, point_to_copy=None):
         self.x = FloatGene()
         self.y = FloatGene()
+        if point_to_copy is not None:
+            self.x.value = point_to_copy.x.value
+            self.y.value = point_to_copy.y.value
 
 
 class PiecemealMappingGene(DynamicListGene):
-    def __init__(self):
-        super().__init__(PiecemealPoint)
+    def __init__(self, crossover_probability=0.01):
+        self.crossoverProbability = crossover_probability
+        super().__init__(element_class=PiecemealPoint, init_size_range=(2, 5))
         self.randomise()
 
     def mutate(self):
@@ -138,13 +173,17 @@ class PiecemealMappingGene(DynamicListGene):
         self.__normalise()
 
     def crossover(self, source):
-        super().crossover(source)
-        self.__normalise()
-        # TODO: Crossover granularity
+        if random.random() < self.crossoverProbability:
+            self.list = []
+            for point in source.list:
+                self.list.append(PiecemealPoint(point))
 
     def __normalise(self):
-        # TODO: sort by x and ensure first and last are 0.0 and 1.0
-        pass
+        self.list.sort(key=attrgetter('x'))
+        if len(self.list) < 2:
+            self.list += [PiecemealPoint(), PiecemealPoint()]
+        self.list[0].x = 0.0
+        self.list[-1].x = 0.0
 
 
 class ThingGene(Genetic):
@@ -152,6 +191,9 @@ class ThingGene(Genetic):
         super().__init__()
         self.amount = FloatGene()
         self.smellSignature = SmellSignatureGene()
+
+    def incompatibility_with(self, other_thing):
+        return self.smellSignature.incompatibility_with(other_thing.smellSignature)
 
 
 class EnvironmentGenome(Genetic):
@@ -168,6 +210,9 @@ class SensorGene(Genetic):
         self.threshold = FloatGene()
         self.angle = FloatGene(bounds=(0.0, 2.0 * math.pi), wrap=True)
         self.smellSignature = SmellSignatureGene()
+
+    def incompatibility_with(self, other_sensor):
+        return self.smellSignature.incompatibility_with(other_sensor.smellSignature)
 
 
 class RobotGenome(Genetic):
