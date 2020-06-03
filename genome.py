@@ -31,10 +31,13 @@ class Genetic:
 
     def crossover(self, source):
         for key in source:
-            if key in self:
-                self[key].crossover(source[key])
-            else:
-                self[key] = source[key]
+            self[key].crossover(source[key])
+
+    def copy(self):
+        clone = self.__class__()
+        for key in self:
+            clone[key] = self[key].copy()
+        return clone
 
     def dump(self, indent=0):
         message = ""
@@ -79,6 +82,11 @@ class FloatGene(Genetic):
             self.value = source.value
         self.__normalise()
 
+    def copy(self):
+        clone = self.__class__()
+        clone.value = self.value
+        return clone
+
     def dump(self, indent=0):
         return f" = {self.value}"
 
@@ -105,6 +113,11 @@ class ListGene(Genetic):
     def __setitem__(self, key, value):
         self.list[key] = value
 
+    def copy(self):
+        clone = self.__class__()
+        clone.list = [item.copy() for item in self.list]
+        return clone
+
 
 class SmellSignatureGene(ListGene):
     NUM_DIMENSIONS = 5
@@ -123,21 +136,12 @@ class SmellSignatureGene(ListGene):
 
 
 class DynamicListGene(ListGene):
-    def __init__(self, element_class, addition_probability=0.001, removal_probability=0.001,
-                 init_size_range=(0, 10), init_list=None):
-        if init_list is None:
-            init_list = []
+    def __init__(self, element_class, addition_probability=0.001, removal_probability=0.001, init_size_range=(0, 10)):
         self.elementClass = element_class
         self.additionProbability = addition_probability
         self.removalProbability = removal_probability
         self.initSizeRange = init_size_range
         super().__init__()
-        self.list = init_list
-
-    def __setitem__(self, key, value):
-        if key >= len(self.list):
-            self.list += [self.elementClass() for _ in range(len(self.list), key + 1)]
-        super().__setitem__(key, value)
 
     def randomise(self):
         self.list = [self.elementClass() for _ in range(random.randrange(*self.initSizeRange))]
@@ -152,14 +156,31 @@ class DynamicListGene(ListGene):
             self.list.insert(random.randint(0, len(self.list)), self.elementClass())
 
     def crossover(self, source):
-        best_permutation = None
-        min_incompatibility = math.inf
-        for source_permutation in source.permutations():
-            incompatibility = self.incompatibility_with(source_permutation) < min_incompatibility
-            if incompatibility < min_incompatibility:
-                best_permutation = source_permutation
-                min_incompatibility = incompatibility
-        super().crossover(best_permutation)
+        # First, pre-compute all the incompatibility values between each element.
+        ours_to_consider = set(range(len(self.list)))
+        theirs_to_consider = set(range(len(source.list)))
+        incompatibility = [[0] * len(theirs_to_consider)] * len(ours_to_consider)
+        for (ours, theirs) in itertools.product(ours_to_consider, theirs_to_consider):
+            incompatibility[ours][theirs] = self.list[ours].incompatibility_with(source.list[theirs])
+
+        # Next, approximate the solution to the Assignment Problem by greedily choosing the best pair each time.
+        while ours_to_consider and theirs_to_consider:
+            best_ours = None
+            best_theirs = None
+            min_incompatibility = math.inf
+            for ours in ours_to_consider:
+                theirs = min(theirs_to_consider, key=incompatibility[ours].__getitem__)
+                if incompatibility[ours][theirs] < min_incompatibility:
+                    best_ours = ours
+                    best_theirs = theirs
+                    min_incompatibility = incompatibility[ours][theirs]
+            self.list[best_ours].crossover(source.list[best_theirs])
+            ours_to_consider.remove(best_ours)
+            theirs_to_consider.remove(best_theirs)
+
+        # Append their remaining elements
+        for theirs in theirs_to_consider:
+            self.list.append(source.list[theirs].copy())
 
     def incompatibility_with(self, other_dynamic_list):
         incompatibility = 0
@@ -167,23 +188,18 @@ class DynamicListGene(ListGene):
             incompatibility += ours.incompatibility_with(theirs)
         return incompatibility
 
-    def permutations(self):
-        for list_permutation in itertools.permutations(self.list):
-            yield DynamicListGene(element_class=self.elementClass,
-                                  addition_probability=self.additionProbability,
-                                  removal_probability=self.removalProbability,
-                                  init_size_range=self.initSizeRange,
-                                  init_list=list_permutation)
-
 
 class PiecemealPoint(Genetic):
-    def __init__(self, point_to_copy=None):
+    def __init__(self):
         super().__init__()
         self.x = FloatGene()
         self.y = FloatGene()
-        if point_to_copy is not None:
-            self.x.value = point_to_copy.x.value
-            self.y.value = point_to_copy.y.value
+
+    def copy(self):
+        clone = self.__class__()
+        clone.x = self.x.copy()
+        clone.y = self.y.copy()
+        return clone
 
 
 class PiecemealMappingGene(DynamicListGene):
@@ -204,7 +220,7 @@ class PiecemealMappingGene(DynamicListGene):
         if random.random() < self.crossoverProbability:
             self.list = []
             for point in source.list:
-                self.list.append(PiecemealPoint(point))
+                self.list.append(point.copy())
 
     def __normalise(self):
         self.list.sort(key=attrgetter('x.value'))
@@ -251,6 +267,11 @@ class LateralityGene(Genetic):
     def crossover(self, source):
         if random.random() < self.crossoverProbability:
             self.laterality = source.laterality
+
+    def copy(self):
+        clone = self.__class__()
+        clone.laterality = self.laterality
+        return clone
 
     def dump(self, indent=0):
         return f" = {self.laterality.name}"
