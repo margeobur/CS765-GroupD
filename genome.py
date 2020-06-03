@@ -326,7 +326,9 @@ def run_examples():
     robot_genome.crossover(robot_genome2)
     print_state("Crossovered with new randomised genomes")
 
-    print("Examples have finished executing. Please manually inspect the output above for correctness.")
+    goodbye = "Examples have finished executing. Please manually inspect the output above for correctness."
+    print("^" * len(goodbye))
+    print(goodbye)
 
 
 if __name__ == "__main__":
