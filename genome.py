@@ -106,17 +106,18 @@ class ListGene(Genetic):
         self.list[key] = value
 
 
-SIGNATURE_NUM_DIMENSIONS = 5
-
-
 class SmellSignatureGene(ListGene):
+    NUM_DIMENSIONS = 5
+    BOUNDS = (-1.0, 1.0)
+    MAX_INCOMPATIBILITY = NUM_DIMENSIONS * ((BOUNDS[1] - BOUNDS[0]) ** 2)
+
     def __init__(self):
         super().__init__()
-        self.list = [FloatGene(bounds=(-1.0, 1.0)) for _ in range(SIGNATURE_NUM_DIMENSIONS)]
+        self.list = [FloatGene(bounds=self.BOUNDS) for _ in range(self.NUM_DIMENSIONS)]
 
     def incompatibility_with(self, other_smell_signature):
         euclidean_distance_squared = 0
-        for i in range(SIGNATURE_NUM_DIMENSIONS):
+        for i in range(self.NUM_DIMENSIONS):
             euclidean_distance_squared += (self.list[i].value - other_smell_signature.list[i].value) ** 2
         return euclidean_distance_squared
 
@@ -278,7 +279,11 @@ class SensorGene(Genetic):
         self.motorSide = LateralityGene()
 
     def incompatibility_with(self, other_sensor):
-        return self.smellSignature.incompatibility_with(other_sensor.smellSignature)
+        laterality_compatibility = (
+            0 if self.motorSide.laterality == other_sensor.motorSide.laterality
+            else SmellSignatureGene.MAX_INCOMPATIBILITY
+        )
+        return laterality_compatibility + self.smellSignature.incompatibility_with(other_sensor.smellSignature)
 
 
 class RobotGenome(Genetic):
