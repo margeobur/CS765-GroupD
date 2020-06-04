@@ -1,40 +1,39 @@
 import random
-import enum
 import numpy as np
 import simulation_state
 import turtle
-
-
-class ThingType(enum.Enum):
-    Food = 1
-    Water = 2
-    Trap = 3
+import itertools
 
 
 class Thing:
-    def __init__(self, ntype, nx=None, ny=None):
-        self.amount = 1.0
-        self.radius = 1.0
-        self.type = ntype
+    COLOUR = "black"
+    CONSUMPTION_RATE = 0.25 * 10.0
+    ROBOT_FILL_RATE = 0.25
+    REGROW_RATE = 0.25
+    TOTAL_AMOUNT = 4
 
-        if nx is None and ny is None:
-            self.position = np.array([
-                random.randrange(0, simulation_state.arena_width),
-                random.randrange(0, simulation_state.arena_width)
-            ])
-        else:
+    def __init__(self, gene, nx=None, ny=None):
+        self.amount_when_full = self.TOTAL_AMOUNT / gene.amount.value
+        self.amount_left = 0
+        self.radius = 1.0
+
+        self.reset()
+
+        if nx is not None and ny is not None:
             self.position = np.array([nx, ny])
+
+    def reset(self):
+        self.amount_left = self.amount_when_full
+        self.position = np.array([
+            random.randrange(0, simulation_state.arena_width),
+            random.randrange(0, simulation_state.arena_width)
+        ])
 
     def draw(self):
         # alpha = int(180 * self.amount)
         # Not sure the above line is needed anymore.
         t = turtle.Turtle()
-        if self.type == ThingType.Food:
-            t.fillcolor("yellow")
-        elif self.type == ThingType.Water:
-            t.fillcolor("blue")
-        else:
-            t.fillcolor("red")
+        t.fillcolor(self.COLOUR)
         t.penup()
         t.goto(self.position[0], self.position[1])
         t.pendown()
@@ -42,74 +41,84 @@ class Thing:
         t.shapesize(self.radius * 2, self.radius * 2)
 
     def update(self):
-        if self.amount < 0.0:
-            self.amount = 1.0
-            self.position = np.array([
-                random.randrange(0, simulation_state.arena_width),
-                random.randrange(0, simulation_state.arena_width)
-            ])
+        if not self.is_gone():
+            self.amount_left += self.REGROW_RATE * simulation_state.timestep
+            self.amount_left = np.clip(self.amount_left, 0, self.amount_when_full)
+
+    def interact_with_robot(self, robot):
+        if not self.is_gone() and np.linalg.norm(self.position - robot.position) < self.radius:
+            self.on_touched_by_robot(robot)
+
+    def on_touched_by_robot(self, robot):
+        # To be implemented by concrete subclasses.
+        pass
+
+    def is_gone(self):
+        return self.amount_left <= 0
+
+
+class Food(Thing):
+    COLOUR = "yellow"
+
+    def on_touched_by_robot(self, robot):
+        self.amount_left -= self.CONSUMPTION_RATE * simulation_state.timestep
+        robot.food_battery += self.ROBOT_FILL_RATE * simulation_state.timestep
+
+
+class Water(Thing):
+    COLOUR = "blue"
+
+    def on_touched_by_robot(self, robot):
+        self.amount_left -= self.CONSUMPTION_RATE * simulation_state.timestep
+        robot.water_battery += self.ROBOT_FILL_RATE * simulation_state.timestep
+
+
+class Trap(Thing):
+    COLOUR = "red"
+
+    def on_touched_by_robot(self, robot):
+        robot.food_battery = 0.0
+        robot.water_battery = 0.0
+        robot.is_alive = False
 
 
 class Environment:
-
-    def __init__(self):
+    def __init__(self, genome):
         self.foods = []
         self.waters = []
         self.traps = []
 
-        # create 4 food sources and 4 water sources
-        for i in range(0, 4):
-            self.foods.append(Thing(ThingType.Food))
-            self.waters.append(Thing(ThingType.Water))
+        for gene in genome.foodGenes.list:
+            for _ in range(int(gene.amount.value)):
+                self.foods.append(Food(gene))
 
-        # create 2 traps
-        self.traps.append(Thing(ThingType.Trap))
-        self.traps.append(Thing(ThingType.Trap))
+        for gene in genome.waterGenes.list:
+            for _ in range(int(gene.amount.value)):
+                self.waters.append(Water(gene))
+
+        # Ensure number of traps = number of (water + food)
+        trap_written_sum = sum([trap.amount.value for trap in genome.trapGenes.list])
+        trap_amount_multiplier = (len(self.foods) + len(self.waters)) / trap_written_sum
+
+        for gene in genome.trapGenes.list:
+            for _ in range(int(gene.amount.value * trap_amount_multiplier)):
+                self.traps.append(Trap(gene))
+
+    def everything(self):
+        return itertools.chain(self.foods, self.waters, self.traps)
 
     def reset(self):
-        for thing in self.foods:
-            thing.amount = -1.0
-            thing.update()
-        for thing in self.waters:
-            thing.amount = -1.0
-            thing.update()
-        for thing in self.traps:
-            thing.amount = -1.0
-            thing.update()
+        for thing in self.everything():
+            thing.reset()
 
     def interact_with_robot(self, robot):
-        consumption_rate = 0.25 * 10.0
-        fill_rate = 0.25
-        # draw stroke here
-
-        for thing in self.foods:
-            if np.linalg.norm(thing.position - robot.position) < thing.radius:
-                thing.amount -= consumption_rate * simulation_state.timestep
-                robot.food_battery += fill_rate * simulation_state.timestep
-
-        for thing in self.waters:
-            if np.linalg.norm(thing.position - robot.position) < thing.radius:
-                thing.amount -= consumption_rate * simulation_state.timestep
-                robot.water_battery += fill_rate * simulation_state.timestep
-
-        for thing in self.traps:
-            if np.linalg.norm(thing.position - robot.position) < thing.radius:
-                robot.food_battery = 0.0
-                robot.water_battery = 0.0
-                robot.is_alive = False
+        for thing in self.everything():
+            thing.interact_with_robot(robot)
 
     def update(self):
-        for thing in self.foods:
-            thing.update()
-        for thing in self.waters:
-            thing.update()
-        for thing in self.traps:
+        for thing in self.everything():
             thing.update()
 
     def draw(self):
-        for f in self.foods:
-            f.draw()
-        for w in self.waters:
-            w.draw()
-        for t in self.traps:
-            t.draw()
+        for thing in self.everything():
+            thing.draw()

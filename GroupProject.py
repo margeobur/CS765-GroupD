@@ -1,12 +1,15 @@
 import simulation_state
 import evolve_mode
+from genome import EnvironmentGenome
 from robot import Robot
 from environment import Environment
 from brain import EvolvableBrain
 import turtle
 
 def setup():
-    simulation_state.env = Environment()
+    environment_genome = EnvironmentGenome()
+    environment_genome.randomise()
+    simulation_state.env = Environment(environment_genome)
 
     for i in range(0, simulation_state.pop_size):
         b = EvolvableBrain()

@@ -42,7 +42,7 @@ class Robot:
 		self.is_alive = True
 
 		self.brain = EvolvableBrain()
-		self.env = Environment()
+		self.env = None
 		self.sensor_values = [[0] * 2] * 3
 
 	def reset(self):
