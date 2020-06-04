@@ -84,12 +84,12 @@ class FloatGene(Genetic):
         self.value += random.gauss(**self.mutationArgs)
         if random.random() < self.randomiseProbability:
             self.randomise()
-        self.__normalise()
+        self.normalise()
 
     def crossover(self, source):
         if random.random() < self.crossoverProbability:
             self.value = source.value
-        self.__normalise()
+        self.normalise()
 
     def flatten(self):
         return self.value
@@ -100,7 +100,7 @@ class FloatGene(Genetic):
     def dump(self, indent=0):
         return f" = {self.value}"
 
-    def __normalise(self):
+    def normalise(self):
         if self.wrap:
             self.value -= self.bounds[0]
             self.value %= self.bounds[1] - self.bounds[0]
@@ -228,11 +228,11 @@ class PiecemealMappingGene(DynamicListGene):
 
     def randomise(self):
         super().randomise()
-        self.__normalise()
+        self.normalise()
 
     def mutate(self):
         super().mutate()
-        self.__normalise()
+        self.normalise()
 
     def crossover(self, source):
         if random.random() < self.crossoverProbability:
@@ -240,7 +240,7 @@ class PiecemealMappingGene(DynamicListGene):
             for point in source.list:
                 self.list.append(copy.deepcopy(point))
 
-    def __normalise(self):
+    def normalise(self):
         self.list.sort(key=attrgetter('x.value'))
         if len(self.list) < 2:
             self.list += [PiecemealPoint() for _ in range(2 - len(self.list))]
@@ -419,6 +419,36 @@ def gene_examples(gene1, gene2):
     print(f"gene2:{gene2.dump(6)}")
 
 
+def float_wrapping_test():
+
+    def test(gene, given, expected):
+        gene.value = given
+        gene.normalise()
+        if math.isclose(gene.value, expected):
+            print(f"OK: {given} -> {gene.value}")
+        else:
+            print(f"Wrong output: given {given}, expected {expected} but got {gene.value}")
+
+    print("Float gene normalisation test for wrapping mode")
+
+    gene1 = FloatGene(bounds=(0, 1), wrap=True)
+
+    test(gene1, 0.5, 0.5)
+    test(gene1, 1.0, 0.0)
+    test(gene1, 0.0, 0.0)
+    test(gene1, 1.1, 0.1)
+    test(gene1, -0.1, 0.9)
+
+    gene2 = FloatGene(bounds=(-1, 1), wrap=True)
+
+    test(gene2, 0.5, 0.5)
+    test(gene2, -0.5, -0.5)
+    test(gene2, 1.0, -1.0)
+    test(gene2, -1.0, -1.0)
+    test(gene2, 1.1, -0.9)
+    test(gene2, -1.1, 0.9)
+
+
 def run_examples():
     # full_examples()
     pairs_to_test = [
@@ -461,6 +491,8 @@ def run_examples():
     ]
     for pair in pairs_to_test:
         gene_examples(*pair)
+
+    float_wrapping_test()
 
     goodbye = "Examples have finished executing. Please manually inspect the output above for correctness."
     print("^" * len(goodbye))
