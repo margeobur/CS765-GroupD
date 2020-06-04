@@ -33,8 +33,8 @@ class Genetic:
         for key in source:
             self[key].crossover(source[key])
 
-    def copy(self):
-        clone = self.__class__()
+    def copy(self, **kwargs):
+        clone = self.__class__(**kwargs)
         for key in self:
             clone[key] = self[key].copy()
         return clone
@@ -82,8 +82,8 @@ class FloatGene(Genetic):
             self.value = source.value
         self.__normalise()
 
-    def copy(self):
-        clone = self.__class__()
+    def copy(self, **kwargs):
+        clone = self.__class__(**kwargs)
         clone.value = self.value
         return clone
 
@@ -113,8 +113,8 @@ class ListGene(Genetic):
     def __setitem__(self, key, value):
         self.list[key] = value
 
-    def copy(self):
-        clone = self.__class__()
+    def copy(self, **kwargs):
+        clone = self.__class__(**kwargs)
         clone.list = [item.copy() for item in self.list]
         return clone
 
@@ -188,6 +188,9 @@ class DynamicListGene(ListGene):
             incompatibility += ours.incompatibility_with(theirs)
         return incompatibility
 
+    def copy(self, **kwargs):
+        return super().copy(element_class=self.elementClass, **kwargs)
+
 
 class PiecemealPoint(Genetic):
     def __init__(self):
@@ -195,8 +198,8 @@ class PiecemealPoint(Genetic):
         self.x = FloatGene()
         self.y = FloatGene()
 
-    def copy(self):
-        clone = self.__class__()
+    def copy(self, **kwargs):
+        clone = self.__class__(**kwargs)
         clone.x = self.x.copy()
         clone.y = self.y.copy()
         return clone
@@ -273,8 +276,8 @@ class LateralityGene(Genetic):
         if random.random() < self.crossoverProbability:
             self.laterality = source.laterality
 
-    def copy(self):
-        clone = self.__class__()
+    def copy(self, **kwargs):
+        clone = self.__class__(**kwargs)
         clone.laterality = self.laterality
         return clone
 
