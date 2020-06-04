@@ -5,6 +5,7 @@ import itertools
 from enum import Enum
 import typing
 import copy
+import json
 
 import numpy as np
 
@@ -33,6 +34,12 @@ class Genetic:
     def crossover(self, source):
         for key in source:
             self[key].crossover(source[key])
+
+    def flatten(self):
+        return {key: self[key].flatten() for key in self}
+
+    def to_json(self):
+        return json.dumps(self.flatten())
 
     def dump(self, indent=0):
         message = ""
@@ -77,6 +84,9 @@ class FloatGene(Genetic):
             self.value = source.value
         self.__normalise()
 
+    def flatten(self):
+        return self.value
+
     def dump(self, indent=0):
         return f" = {self.value}"
 
@@ -102,6 +112,9 @@ class ListGene(Genetic):
 
     def __setitem__(self, key, value):
         self.list[key] = value
+
+    def flatten(self):
+        return [item.flatten() for item in self.list]
 
 
 class SmellSignatureGene(ListGene):
@@ -252,6 +265,9 @@ class LateralityGene(Genetic):
         if random.random() < self.crossoverProbability:
             self.laterality = source.laterality
 
+    def flatten(self):
+        return self.laterality.name
+
     def dump(self, indent=0):
         return f" = {self.laterality.name}"
 
@@ -359,6 +375,10 @@ def gene_examples(gene1, gene2):
     clone.randomise()
     print(f"gene1:{gene1.dump(6)}")
     print(f"copy: {clone.dump(6)}")
+
+    print("Json:")
+    print(gene1.to_json())
+    print(gene2.to_json())
 
 
 def run_examples():
