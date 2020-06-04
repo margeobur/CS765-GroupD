@@ -308,7 +308,7 @@ class EnvironmentGenome(Genetic):
         super().__init__()
         self.waterGenes = DynamicListGene(ThingGene)
         self.foodGenes = DynamicListGene(ThingGene)
-        self.hazardGenes = DynamicListGene(ThingGene)
+        self.trapGenes = DynamicListGene(ThingGene)
 
 
 class SensorGene(Genetic):
