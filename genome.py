@@ -318,7 +318,7 @@ class RobotGenome(Genetic):
         self.sensors = DynamicListGene(SensorGene)
 
 
-def run_examples():
+def full_examples():
     environment_genome = EnvironmentGenome()
     robot_genome = RobotGenome()
 
@@ -351,6 +351,84 @@ def run_examples():
     environment_genome.crossover(environment_genome2)
     robot_genome.crossover(robot_genome2)
     print_state("Crossovered with new randomised genomes")
+
+
+def gene_examples(gene1, gene2):
+    print("=" * 80)
+    print(gene1.__class__.__name__)
+    print(gene2.__class__.__name__)
+    print("Initial:")
+    print(f"gene1:{gene1.dump(6)}")
+    print(f"gene2:{gene2.dump(6)}")
+
+    for _ in range(6):
+        print("Mutated:")
+        gene1.mutate()
+        gene2.mutate()
+        print(f"gene1:{gene1.dump(6)}")
+        print(f"gene2:{gene2.dump(6)}")
+
+    for _ in range(3):
+        print("Crossover:")
+        gene1.crossover(gene2)
+        print(f"gene1:{gene1.dump(6)}")
+        print(f"gene2:{gene2.dump(6)}")
+
+    print("Randomise:")
+    gene1.randomise()
+    gene2.randomise()
+    print(f"gene1:{gene1.dump(6)}")
+    print(f"gene2:{gene2.dump(6)}")
+
+    print("Randomise a copy:")
+    copy = gene1.copy()
+    copy.randomise()
+    print(f"gene1:{gene1.dump(6)}")
+    print(f"copy: {copy.dump(6)}")
+
+
+def run_examples():
+    # full_examples()
+    pairs_to_test = [
+        (
+            FloatGene(randomise_probability=0.0, crossover_probability=1.0),
+            FloatGene(randomise_probability=0.0, crossover_probability=1.0)
+        ),
+        (
+            SmellSignatureGene(),
+            SmellSignatureGene()
+        ),
+        (
+            PiecemealPoint(),
+            PiecemealPoint()
+        ),
+        (
+            ThingGene(),
+            ThingGene()
+        ),
+        (
+            LateralityGene(crossover_probability=1.0),
+            LateralityGene(crossover_probability=1.0)
+        ),
+        (
+            PiecemealMappingGene(crossover_probability=1.0, addition_probability=0.3, removal_probability=0.3),
+            PiecemealMappingGene(crossover_probability=1.0, addition_probability=0.3, removal_probability=0.3)
+        ),
+        (
+            EnvironmentGenome(),
+            EnvironmentGenome()
+        ),
+        (
+            SensorGene(),
+            SensorGene()
+        ),
+        (
+            RobotGenome(),
+            RobotGenome()
+        ),
+    ]
+    for pair in pairs_to_test:
+        gene_examples(*pair)
 
     goodbye = "Examples have finished executing. Please manually inspect the output above for correctness."
     print("^" * len(goodbye))
