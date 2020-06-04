@@ -149,7 +149,7 @@ class DynamicListGene(ListGene):
 
     def mutate(self):
         super().mutate()
-        if random.random() < self.additionProbability:
+        if random.random() < self.removalProbability:
             self.list.pop(random.randrange(0, len(self.list)))
         if random.random() < self.additionProbability:
             # Note: Using randint to allow appending after last element.
