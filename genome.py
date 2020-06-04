@@ -38,8 +38,15 @@ class Genetic:
     def flatten(self):
         return {key: self[key].flatten() for key in self}
 
+    def from_flattened(self, flattened):
+        for key in flattened:
+            self[key].from_flattened(flattened[key])
+
     def to_json(self):
         return json.dumps(self.flatten())
+
+    def from_json(self, json_string):
+        self.from_flattened(json.loads(json_string))
 
     def dump(self, indent=0):
         message = ""
@@ -87,6 +94,9 @@ class FloatGene(Genetic):
     def flatten(self):
         return self.value
 
+    def from_flattened(self, flattened):
+        self.value = flattened
+
     def dump(self, indent=0):
         return f" = {self.value}"
 
@@ -115,6 +125,10 @@ class ListGene(Genetic):
 
     def flatten(self):
         return [item.flatten() for item in self.list]
+
+    def from_flattened(self, flattened):
+        for (item, flattened_item) in zip(self.list, flattened):
+            item.from_flattened(flattened_item)
 
 
 class SmellSignatureGene(ListGene):
@@ -185,6 +199,13 @@ class DynamicListGene(ListGene):
         for (ours, theirs) in zip(self.list, other_dynamic_list.list):
             incompatibility += ours.incompatibility_with(theirs)
         return incompatibility
+
+    def from_flattened(self, flattened):
+        self.list = []
+        for flattened_item in flattened:
+            item = self.elementClass()
+            item.from_flattened(flattened_item)
+            self.list.append(item)
 
 
 class PiecemealPoint(Genetic):
@@ -267,6 +288,9 @@ class LateralityGene(Genetic):
 
     def flatten(self):
         return self.laterality.name
+
+    def from_flattened(self, flattened):
+        self.laterality = Laterality[flattened]
 
     def dump(self, indent=0):
         return f" = {self.laterality.name}"
@@ -376,9 +400,23 @@ def gene_examples(gene1, gene2):
     print(f"gene1:{gene1.dump(6)}")
     print(f"copy: {clone.dump(6)}")
 
-    print("Json:")
+    print("JSON:")
     print(gene1.to_json())
     print(gene2.to_json())
+
+    print("To JSON and back again, swapped:")
+    gene1.randomise()
+    gene2.randomise()
+    print("Before swap:")
+    print(f"gene1:{gene1.dump(6)}")
+    print(f"gene2:{gene2.dump(6)}")
+    json1 = gene1.to_json()
+    json2 = gene2.to_json()
+    gene2.from_json(json1)
+    gene1.from_json(json2)
+    print("After swap:")
+    print(f"gene1:{gene1.dump(6)}")
+    print(f"gene2:{gene2.dump(6)}")
 
 
 def run_examples():
