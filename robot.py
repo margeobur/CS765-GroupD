@@ -1,31 +1,23 @@
-from environment import Environment
 from brain import EvolvableBrain
 import random
 import simulation_state
-import math
 import numpy as np
 from maths import polar2vec
+import math
 import turtle
 
 
-# arena_width
-# timestep
-
-
 class Robot:
-	def __init__(self):
-		#radius of the robot
+	def __init__(self, genome):
+		# Radius of the robot
 		self.radius = 1
 
-		#Sensor angle
-		self.beta = 3.14159 / 4
-
-		#Robot's x, y position and heading angle
+		# Robot's x, y position and heading angle
 		self.position = np.array([
 			random.uniform(0, simulation_state.arena_width),
 			random.uniform(0, simulation_state.arena_width)
 		])
-		self.a = random.uniform(0, 2.0*3.14159)
+		self.angle = random.uniform(0, 2.0 * math.PI)
 
 		self.food_battery = 1.0
 		self.water_battery = 1.0
@@ -33,7 +25,7 @@ class Robot:
 		self.l_motor = random.uniform(0, 1)
 		self.r_motor = random.uniform(0, 1)
 
-		#sense colours
+		# Sense colours
 		self.r = random.randrange(64, 192)
 		self.g = random.randrange(64, 192)
 		self.b = random.randrange(64, 192)
@@ -41,9 +33,11 @@ class Robot:
 
 		self.is_alive = True
 
-		self.brain = EvolvableBrain()
+		self.brain = EvolvableBrain(genome)
 		self.env = None
-		self.sensor_values = [[0] * 2] * 3
+		self.sensor_values = np.zeros(len(genome.sensors.list))
+		self.sensor_angles = np.array([gene.angle.value for gene in genome.sensors.list])
+		self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in genome.sensors.list])
 
 	def reset(self):
 		self.position = np.array([
@@ -55,19 +49,16 @@ class Robot:
 		self.water_battery = 0.75
 		self.is_alive = True
 
-	def set_brain(self, b):
-		self.brain = b
-
 	def set_environment(self, new_env):
 		self.env = new_env
 
 	def update(self):
-		self.brain.iterate(self)
+		self.l_motor, self.r_motor = self.brain.iterate(self.sensor_values)
 		max_speed = 10.0
 
 		if self.is_alive:
-			self.position += simulation_state.timestep * polar2vec(self.a) * (self.l_motor + self.r_motor) * max_speed
-			self.a += simulation_state.timestep * max_speed * (self.l_motor - self.r_motor) / (2.0 * self.radius)
+			self.position += simulation_state.timestep * polar2vec(self.angle) * (self.l_motor + self.r_motor) * max_speed
+			self.angle += simulation_state.timestep * max_speed * (self.l_motor - self.r_motor) / (2.0 * self.radius)
 
 			self.env.interact_with_robot(self)
 			self.food_battery = np.clip(self.food_battery - 0.04 * simulation_state.timestep, 0.0, 1.0)
@@ -78,7 +69,8 @@ class Robot:
 			self.food_battery = 0.0
 			self.water_battery = 0.0
 
-	def sense(self, sense_vector, thing):
+	def sense(self, sensor_angle, sensor_signature, thing):
+		sense_vector = polar2vec(self.angle + sensor_angle)
 		sensor_to_thing = thing.position - (self.position + sense_vector * self.radius)
 		sensor_to_thing_magnitude = np.linalg.norm(sensor_to_thing)
 		impact = (simulation_state.arena_width - sensor_to_thing_magnitude) / simulation_state.arena_width
@@ -87,35 +79,15 @@ class Robot:
 		# TODO (Ernest): Why is it cubed?
 		attenuation *= attenuation * attenuation
 
+		smell_alignment = np.dot(sensor_signature, thing.smell_signature)
+
 		if attenuation < 0.0:
 			attenuation = 0.0
-		return impact * attenuation
+		return impact * attenuation * smell_alignment
 
 	def calculate_change(self):
-		sense_vectors = [polar2vec(self.a - self.beta), polar2vec(self.a + self.beta)]
-
-		raw_sensor_value = 0.0
-		for i in range(0, len(sense_vectors)):
-			raw_sensor_value = 0.0
-			for thing in self.env.foods:
-				s = self.sense(sense_vectors[i], thing)
-				if s > raw_sensor_value:
-					raw_sensor_value = s
-			self.sensor_values[0][i] = raw_sensor_value
-
-			raw_sensor_value = 0.0
-			for thing in self.env.waters:
-				s = self.sense(sense_vectors[i], thing)
-				if s > raw_sensor_value:
-					raw_sensor_value = s
-			self.sensor_values[1][i] = raw_sensor_value
-
-			raw_sensor_value = 0.0
-			for thing in self.env.traps:
-				s = self.sense(sense_vectors[i], thing)
-				if s > raw_sensor_value:
-					raw_sensor_value += s
-			self.sensor_values[2][i] = raw_sensor_value
+		for i, (angle, signature) in enumerate(zip(self.sensor_angles, self.sensor_signatures)):
+			self.sensor_values[i] = max([self.sense(angle, signature, thing) for thing in self.env.everything()])
 
 	def draw(self):
 		alpha = 127
@@ -132,8 +104,8 @@ class Robot:
 		t.pendown()
 		t.shape("circle")
 		t.shapesize(self.radius*2, self.radius*2)
-		# hx = math.cos(self.a) * self.radius
-		# hy = math.sin(self.a) * self.radius
+		# hx = math.cos(self.angle) * self.radius
+		# hy = math.sin(self.angle) * self.radius
 		# t.penup()
 		# t.goto(gx, gy)
 		# t.pendown()

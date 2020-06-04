@@ -1,26 +1,24 @@
 import simulation_state
 import evolve_mode
-from genome import EnvironmentGenome
+from genome import EnvironmentGenome, RobotGenome
 from robot import Robot
 from environment import Environment
-from brain import EvolvableBrain
 import turtle
+
 
 def setup():
     environment_genome = EnvironmentGenome()
     environment_genome.randomise()
     simulation_state.env = Environment(environment_genome)
 
-    for i in range(0, simulation_state.pop_size):
-        b = EvolvableBrain()
-        b.randomise()
-        simulation_state.evolvable_brains.append(b)
+    for _ in range(simulation_state.pop_size):
+        robot_genome = RobotGenome()
+        robot_genome.randomise()
+        simulation_state.robot_genomes.append(robot_genome)
+        robot = Robot(robot_genome)
+        robot.set_environment(simulation_state.env)
+        simulation_state.robots.append(robot)
 
-    for i in range(0, simulation_state.pop_size):
-        r = Robot()
-        r.set_brain(simulation_state.evolvable_brains[i])
-        r.set_environment(simulation_state.env)
-        simulation_state.robots.append(r)
 
 def main():
     setup()

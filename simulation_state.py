@@ -6,5 +6,6 @@ iteration = 0
 
 pop_size = 30
 env = None
-evolvable_brains = []
+environment_genomes = []
+robot_genomes = []
 robots = []

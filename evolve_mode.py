@@ -25,12 +25,10 @@ def iterate_evolve():
     while a_id == b_id:
         random.randrange(0, simulation_state.pop_size)
 
-    a = Robot()
-    a.set_brain(simulation_state.evolvable_brains[a_id])
+    a = Robot(simulation_state.robot_genomes[a_id])
     a.set_environment(simulation_state.env)
     a.draw()
-    b = Robot()
-    b.set_brain(simulation_state.evolvable_brains[b_id])
+    b = Robot(simulation_state.robot_genomes[b_id])
     b.set_environment(simulation_state.env)
     b.draw()
 
@@ -68,8 +66,7 @@ def iterate_evolve():
         winner_id = a_id
         loser_id = b_id
 
-    simulation_state.evolvable_brains[loser_id] = \
-        simulation_state.evolvable_brains[winner_id].imprint(simulation_state.evolvable_brains[loser_id])
+    simulation_state.robot_genomes[loser_id].crossover(simulation_state.robot_genomes[winner_id])
 
 
 def main():
