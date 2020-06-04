@@ -203,9 +203,14 @@ class PiecemealPoint(Genetic):
 
 
 class PiecemealMappingGene(DynamicListGene):
-    def __init__(self, crossover_probability=0.01):
+    def __init__(self, crossover_probability=0.01, addition_probability=0.001, removal_probability=0.001):
         self.crossoverProbability = crossover_probability
-        super().__init__(element_class=PiecemealPoint, init_size_range=(2, 5))
+        super().__init__(
+            element_class=PiecemealPoint,
+            addition_probability=addition_probability,
+            removal_probability=removal_probability,
+            init_size_range=(2, 5)
+        )
         self.randomise()
 
     def randomise(self):
