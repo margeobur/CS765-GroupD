@@ -4,6 +4,7 @@ from operator import attrgetter
 import itertools
 from enum import Enum
 import typing
+import copy
 
 import numpy as np
 
@@ -32,12 +33,6 @@ class Genetic:
     def crossover(self, source):
         for key in source:
             self[key].crossover(source[key])
-
-    def copy(self, **kwargs):
-        clone = self.__class__(**kwargs)
-        for key in self:
-            clone[key] = self[key].copy()
-        return clone
 
     def dump(self, indent=0):
         message = ""
@@ -82,11 +77,6 @@ class FloatGene(Genetic):
             self.value = source.value
         self.__normalise()
 
-    def copy(self, **kwargs):
-        clone = self.__class__(**kwargs)
-        clone.value = self.value
-        return clone
-
     def dump(self, indent=0):
         return f" = {self.value}"
 
@@ -112,11 +102,6 @@ class ListGene(Genetic):
 
     def __setitem__(self, key, value):
         self.list[key] = value
-
-    def copy(self, **kwargs):
-        clone = self.__class__(**kwargs)
-        clone.list = [item.copy() for item in self.list]
-        return clone
 
 
 class SmellSignatureGene(ListGene):
@@ -180,7 +165,7 @@ class DynamicListGene(ListGene):
 
         # Append their remaining elements
         for theirs in theirs_to_consider:
-            self.list.append(source.list[theirs].copy())
+            self.list.append(copy.deepcopy(source.list[theirs]))
 
     def incompatibility_with(self, other_dynamic_list):
         incompatibility = 0
@@ -188,21 +173,12 @@ class DynamicListGene(ListGene):
             incompatibility += ours.incompatibility_with(theirs)
         return incompatibility
 
-    def copy(self, **kwargs):
-        return super().copy(element_class=self.elementClass, **kwargs)
-
 
 class PiecemealPoint(Genetic):
     def __init__(self):
         super().__init__()
         self.x = FloatGene()
         self.y = FloatGene()
-
-    def copy(self, **kwargs):
-        clone = self.__class__(**kwargs)
-        clone.x = self.x.copy()
-        clone.y = self.y.copy()
-        return clone
 
 
 class PiecemealMappingGene(DynamicListGene):
@@ -228,7 +204,7 @@ class PiecemealMappingGene(DynamicListGene):
         if random.random() < self.crossoverProbability:
             self.list = []
             for point in source.list:
-                self.list.append(point.copy())
+                self.list.append(copy.deepcopy(point))
 
     def __normalise(self):
         self.list.sort(key=attrgetter('x.value'))
@@ -275,11 +251,6 @@ class LateralityGene(Genetic):
     def crossover(self, source):
         if random.random() < self.crossoverProbability:
             self.laterality = source.laterality
-
-    def copy(self, **kwargs):
-        clone = self.__class__(**kwargs)
-        clone.laterality = self.laterality
-        return clone
 
     def dump(self, indent=0):
         return f" = {self.laterality.name}"
@@ -383,11 +354,11 @@ def gene_examples(gene1, gene2):
     print(f"gene1:{gene1.dump(6)}")
     print(f"gene2:{gene2.dump(6)}")
 
-    print("Randomise a copy:")
-    copy = gene1.copy()
-    copy.randomise()
+    print("Randomise a copy (ensure that copy doesn't affect original):")
+    clone = copy.deepcopy(gene1)
+    clone.randomise()
     print(f"gene1:{gene1.dump(6)}")
-    print(f"copy: {copy.dump(6)}")
+    print(f"copy: {clone.dump(6)}")
 
 
 def run_examples():
