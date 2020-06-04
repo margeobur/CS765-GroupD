@@ -94,7 +94,7 @@ class EvolvableBrain:
     def __init__(self, copy_me=None):
         self.n_senses = 3
         self.n_motors = 2
-        self.maps = [[0] * self.n_motors] * self.n_senses
+        self.maps = [[0 for _ in range(self.n_motors)] for _ in range(self.n_senses)]
         if copy_me is None:
             for i in range(0, self.n_senses):
                 for j in range(0, self.n_motors):
