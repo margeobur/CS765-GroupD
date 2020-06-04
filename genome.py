@@ -79,6 +79,7 @@ class FloatGene(Genetic):
 
     def randomise(self):
         self.value = random.uniform(*self.bounds)
+        self.normalise()
 
     def mutate(self):
         self.value += random.gauss(**self.mutationArgs)
@@ -107,6 +108,12 @@ class FloatGene(Genetic):
             self.value += self.bounds[0]
         else:
             self.value = np.clip(self.value, *self.bounds)
+
+
+class IntGene(FloatGene):
+    def normalise(self):
+        super().normalise()
+        self.value = int(self.value)
 
 
 class ListGene(Genetic):
@@ -251,7 +258,7 @@ class PiecemealMappingGene(DynamicListGene):
 class ThingGene(Genetic):
     def __init__(self):
         super().__init__()
-        self.amount = FloatGene()
+        self.amount = IntGene(bounds=(1, 4))
         self.smellSignature = SmellSignatureGene()
 
     def incompatibility_with(self, other_thing):
