@@ -144,7 +144,7 @@ class DynamicListGene(ListGene):
         # First, pre-compute all the incompatibility values between each element.
         ours_to_consider = set(range(len(self.list)))
         theirs_to_consider = set(range(len(source.list)))
-        incompatibility = [[0] * len(theirs_to_consider)] * len(ours_to_consider)
+        incompatibility = np.zeros((len(ours_to_consider), len(theirs_to_consider)))
         for (ours, theirs) in itertools.product(ours_to_consider, theirs_to_consider):
             incompatibility[ours][theirs] = self.list[ours].incompatibility_with(source.list[theirs])
 
@@ -279,11 +279,11 @@ class SensorGene(Genetic):
         self.motorSide = LateralityGene()
 
     def incompatibility_with(self, other_sensor):
-        laterality_compatibility = (
+        laterality_incompatibility = (
             0 if self.motorSide.laterality == other_sensor.motorSide.laterality
             else SmellSignatureGene.MAX_INCOMPATIBILITY
         )
-        return laterality_compatibility + self.smellSignature.incompatibility_with(other_sensor.smellSignature)
+        return laterality_incompatibility + self.smellSignature.incompatibility_with(other_sensor.smellSignature)
 
 
 class RobotGenome(Genetic):
