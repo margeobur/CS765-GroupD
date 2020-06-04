@@ -16,6 +16,7 @@ class Thing:
         self.amount_when_full = self.TOTAL_AMOUNT / gene.amount.value
         self.amount_left = 0
         self.radius = 1.0
+        self.smell_signature = gene.smell_signature
 
         self.reset()
 
