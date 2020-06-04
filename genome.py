@@ -335,6 +335,12 @@ def gene_examples(gene1, gene2):
     print(f"gene1:{gene1.dump(6)}")
     print(f"gene2:{gene2.dump(6)}")
 
+    print("Randomise:")
+    gene1.randomise()
+    gene2.randomise()
+    print(f"gene1:{gene1.dump(6)}")
+    print(f"gene2:{gene2.dump(6)}")
+
     for _ in range(6):
         print("Mutated:")
         gene1.mutate()
@@ -347,12 +353,6 @@ def gene_examples(gene1, gene2):
         gene1.crossover(gene2)
         print(f"gene1:{gene1.dump(6)}")
         print(f"gene2:{gene2.dump(6)}")
-
-    print("Randomise:")
-    gene1.randomise()
-    gene2.randomise()
-    print(f"gene1:{gene1.dump(6)}")
-    print(f"gene2:{gene2.dump(6)}")
 
     print("Randomise a copy (ensure that copy doesn't affect original):")
     clone = copy.deepcopy(gene1)
