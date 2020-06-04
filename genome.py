@@ -70,9 +70,9 @@ class FloatGene(Genetic):
         if mutation_args is None:
             mutation_args = {"mu": 0.0, "sigma": 0.01}
         self.value = 0.0
-        self.mutationArgs = mutation_args
-        self.randomiseProbability = randomise_probability
-        self.crossoverProbability = crossover_probability
+        self.mutation_args = mutation_args
+        self.randomise_probability = randomise_probability
+        self.crossover_probability = crossover_probability
         self.bounds = bounds
         self.wrap = wrap
         self.randomise()
@@ -82,13 +82,13 @@ class FloatGene(Genetic):
         self.normalise()
 
     def mutate(self):
-        self.value += random.gauss(**self.mutationArgs)
-        if random.random() < self.randomiseProbability:
+        self.value += random.gauss(**self.mutation_args)
+        if random.random() < self.randomise_probability:
             self.randomise()
         self.normalise()
 
     def crossover(self, source):
-        if random.random() < self.crossoverProbability:
+        if random.random() < self.crossover_probability:
             self.value = source.value
         self.normalise()
 
@@ -149,24 +149,24 @@ class SmellSignatureGene(ListGene):
 
 
 class DynamicListGene(ListGene):
-    def __init__(self, element_class, addition_probability=0.001, removal_probability=0.001, init_size_range=(0, 10)):
-        self.elementClass = element_class
-        self.additionProbability = addition_probability
-        self.removalProbability = removal_probability
-        self.initSizeRange = init_size_range
+    def __init__(self, ElementClass, addition_probability=0.001, removal_probability=0.001, init_size_range=(0, 10)):
+        self.ElementClass = ElementClass
+        self.addition_probability = addition_probability
+        self.removal_probability = removal_probability
+        self.init_size_range = init_size_range
         super().__init__()
 
     def randomise(self):
-        self.list = [self.elementClass() for _ in range(random.randrange(*self.initSizeRange))]
+        self.list = [self.ElementClass() for _ in range(random.randrange(*self.init_size_range))]
         super().randomise()
 
     def mutate(self):
         super().mutate()
-        if random.random() < self.removalProbability:
+        if random.random() < self.removal_probability:
             self.list.pop(random.randrange(0, len(self.list)))
-        if random.random() < self.additionProbability:
+        if random.random() < self.addition_probability:
             # Note: Using randint to allow appending after last element.
-            self.list.insert(random.randint(0, len(self.list)), self.elementClass())
+            self.list.insert(random.randint(0, len(self.list)), self.ElementClass())
 
     def crossover(self, source):
         # First, pre-compute all the incompatibility values between each element.
@@ -204,7 +204,7 @@ class DynamicListGene(ListGene):
     def from_flattened(self, flattened):
         self.list = []
         for flattened_item in flattened:
-            item = self.elementClass()
+            item = self.ElementClass()
             item.from_flattened(flattened_item)
             self.list.append(item)
 
@@ -218,9 +218,9 @@ class PiecemealPoint(Genetic):
 
 class PiecemealMappingGene(DynamicListGene):
     def __init__(self, crossover_probability=0.01, addition_probability=0.001, removal_probability=0.001):
-        self.crossoverProbability = crossover_probability
+        self.crossover_probability = crossover_probability
         super().__init__(
-            element_class=PiecemealPoint,
+            ElementClass=PiecemealPoint,
             addition_probability=addition_probability,
             removal_probability=removal_probability,
             init_size_range=(2, 5)
@@ -236,7 +236,7 @@ class PiecemealMappingGene(DynamicListGene):
         self.normalise()
 
     def crossover(self, source):
-        if random.random() < self.crossoverProbability:
+        if random.random() < self.crossover_probability:
             self.list = []
             for point in source.list:
                 self.list.append(copy.deepcopy(point))
@@ -253,10 +253,10 @@ class ThingGene(Genetic):
     def __init__(self):
         super().__init__()
         self.amount = FloatGene(bounds=(1, 4))
-        self.smellSignature = SmellSignatureGene()
+        self.smell_signature = SmellSignatureGene()
 
     def incompatibility_with(self, other_thing):
-        return self.smellSignature.incompatibility_with(other_thing.smellSignature)
+        return self.smell_signature.incompatibility_with(other_thing.smell_signature)
 
 
 class Laterality(Enum):
@@ -271,8 +271,8 @@ Laterality = Laterality  # type: typing.Union[typing.Type[Laterality], typing.It
 class LateralityGene(Genetic):
     def __init__(self, randomise_probability=0.001, crossover_probability=0.001):
         self.laterality = Laterality.LEFT
-        self.randomiseProbability = randomise_probability
-        self.crossoverProbability = crossover_probability
+        self.randomise_probability = randomise_probability
+        self.crossover_probability = crossover_probability
         super().__init__()
         self.randomise()
 
@@ -280,11 +280,11 @@ class LateralityGene(Genetic):
         self.laterality = random.choice(list(Laterality))
 
     def mutate(self):
-        if random.random() < self.randomiseProbability:
+        if random.random() < self.randomise_probability:
             self.randomise()
 
     def crossover(self, source):
-        if random.random() < self.crossoverProbability:
+        if random.random() < self.crossover_probability:
             self.laterality = source.laterality
 
     def flatten(self):
@@ -300,9 +300,9 @@ class LateralityGene(Genetic):
 class EnvironmentGenome(Genetic):
     def __init__(self):
         super().__init__()
-        self.waterGenes = DynamicListGene(ThingGene)
-        self.foodGenes = DynamicListGene(ThingGene)
-        self.trapGenes = DynamicListGene(ThingGene)
+        self.water_genes = DynamicListGene(ThingGene)
+        self.food_genes = DynamicListGene(ThingGene)
+        self.trap_genes = DynamicListGene(ThingGene)
 
 
 class SensorGene(Genetic):
@@ -315,16 +315,16 @@ class SensorGene(Genetic):
         self.mapping = PiecemealMappingGene()
 
         self.angle = FloatGene(bounds=(0.0, 2.0 * math.pi), wrap=True)
-        self.smellSignature = SmellSignatureGene()
+        self.smell_signature = SmellSignatureGene()
 
-        self.motorSide = LateralityGene()
+        self.motor_side = LateralityGene()
 
     def incompatibility_with(self, other_sensor):
         laterality_incompatibility = (
-            0 if self.motorSide.laterality == other_sensor.motorSide.laterality
+            0 if self.motor_side.laterality == other_sensor.motor_side.laterality
             else SmellSignatureGene.MAX_INCOMPATIBILITY
         )
-        return laterality_incompatibility + self.smellSignature.incompatibility_with(other_sensor.smellSignature)
+        return laterality_incompatibility + self.smell_signature.incompatibility_with(other_sensor.smell_signature)
 
 
 class RobotGenome(Genetic):

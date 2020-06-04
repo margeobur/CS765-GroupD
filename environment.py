@@ -88,19 +88,19 @@ class Environment:
         self.waters = []
         self.traps = []
 
-        for gene in genome.foodGenes.list:
+        for gene in genome.food_genes.list:
             for _ in range(int(gene.amount.value)):
                 self.foods.append(Food(gene))
 
-        for gene in genome.waterGenes.list:
+        for gene in genome.water_genes.list:
             for _ in range(int(gene.amount.value)):
                 self.waters.append(Water(gene))
 
         # Ensure number of traps = number of (water + food)
-        trap_written_sum = sum([trap.amount.value for trap in genome.trapGenes.list])
+        trap_written_sum = sum([trap.amount.value for trap in genome.trap_genes.list])
         trap_amount_multiplier = (len(self.foods) + len(self.waters)) / trap_written_sum
 
-        for gene in genome.trapGenes.list:
+        for gene in genome.trap_genes.list:
             for _ in range(int(gene.amount.value * trap_amount_multiplier)):
                 self.traps.append(Trap(gene))
 
