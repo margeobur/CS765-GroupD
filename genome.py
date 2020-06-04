@@ -149,7 +149,7 @@ class SmellSignatureGene(ListGene):
 
 
 class DynamicListGene(ListGene):
-    def __init__(self, ElementClass, addition_probability=0.001, removal_probability=0.001, init_size_range=(0, 10)):
+    def __init__(self, ElementClass, addition_probability=0.001, removal_probability=0.001, init_size_range=(1, 10)):
         self.ElementClass = ElementClass
         self.addition_probability = addition_probability
         self.removal_probability = removal_probability
@@ -162,7 +162,7 @@ class DynamicListGene(ListGene):
 
     def mutate(self):
         super().mutate()
-        if random.random() < self.removal_probability:
+        if random.random() < self.removal_probability and len(self.list) > 1:
             self.list.pop(random.randrange(0, len(self.list)))
         if random.random() < self.addition_probability:
             # Note: Using randint to allow appending after last element.
