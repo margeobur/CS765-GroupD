@@ -448,6 +448,15 @@ def float_wrapping_test():
     test(gene2, 1.1, -0.9)
     test(gene2, -1.1, 0.9)
 
+    gene3 = FloatGene(bounds=(-2.0, -0.5), wrap=True)
+
+    test(gene3, -0.7, -0.7)
+    test(gene3, -1.5, -1.5)
+    test(gene3, 0.5, -1.0)
+    test(gene3, -0.5, -2.0)
+    test(gene3, -2.0, -2.0)
+    test(gene3, -2.5, -1.0)
+
 
 def run_examples():
     # full_examples()
