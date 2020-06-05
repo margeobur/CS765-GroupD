@@ -6,6 +6,8 @@ from maths import polar2vec, rotation2d
 import math
 import turtle
 
+from robot_artist import RobotArtist
+
 
 class Robot:
 	def __init__(self, genome):
@@ -39,6 +41,9 @@ class Robot:
 		self.sensor_vectors = np.array([polar2vec(gene.angle.value) for gene in genome.sensors.list]).transpose()
 		self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in genome.sensors.list]).transpose()
 		self.smell_alignment = None
+
+		# An artist for handling the GUI
+		self.artist = RobotArtist(self.radius)
 
 	def reset(self):
 		self.position = np.vstack([
@@ -102,21 +107,7 @@ class Robot:
 		t = turtle.Turtle()
 		if self.is_alive:
 			alpha = 255
-		t.fillcolor(64, 64, 64)
-		t.pensize(0.125)
-		t.pencolor(255, 255, 255)
-		gx = self.position[0][0]
-		gy = self.position[1][0]
-		t.penup()
-		t.goto(gx, gy)
-		t.pendown()
-		t.shape("circle")
-		t.shapesize(self.radius*2, self.radius*2)
-		# hx = math.cos(self.angle) * self.radius
-		# hy = math.sin(self.angle) * self.radius
-		# t.penup()
-		# t.goto(gx, gy)
-		# t.pendown()
-		# t.goto(gx+hx, gy+hy)
+		
+		self.artist.draw(self.position[0], self.position[1], self.is_alive)
 
 
