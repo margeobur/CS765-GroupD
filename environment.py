@@ -20,7 +20,7 @@ class Thing:
         self.radius = 1.0
         self.smell_signature = gene.smell_signature.flatten()
 
-        self.artist = ThingArtist(1, self.COLOUR)
+        self.artist = ThingArtist(1)
 
         self.reset()
 
@@ -35,7 +35,8 @@ class Thing:
         ])
 
     def draw(self):
-        self.artist.draw(self.position[0], self.position[1])
+        self.artist.x_position(self.position[0]).y_position(self.position[1]).colour(self.COLOUR)
+        self.artist.draw()
 
     def update(self):
         if not self.is_gone():

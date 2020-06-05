@@ -11,23 +11,26 @@ class ThingArtist(Artist):
     # Constructor
     # Parameters: 
     #   r: radius for the GUI element
-    def __init__(self, r, colour):
+    def __init__(self, r):
         super().__init__(r)
-        self.COLOUR = colour
+
+    ''' --------------Setters for build method (head)-------------- '''
+
+    
+
+    ''' --------------Setters for build method (tail)-------------- '''
         
     # Method for drawing the robot
     # Parameters:
-    #   gx: see Artist#draw()
-    #   gy: see Artist#draw()
-    #   is_alive: a boolean to check if the robot is alive
-    def draw(self, gx, gy):
+    #   ...
+    def draw(self):
         turtle.tracer(0, 0)
 
         # fill in the colour
         self.fill_colour()
         
         # draw the main body
-        self.draw_body(gx, gy)
+        self.draw_body()
         
         # draw the details
         self.draw_detail()
@@ -35,6 +38,6 @@ class ThingArtist(Artist):
         
     # Method for filling in the colour of the element
     # Parameters:
-    #   is_alive: a boolean to check if the robot is alive
+    #   ...
     def fill_colour(self):
-        super().fill_colour(self.COLOUR)
+        super().fill_colour()

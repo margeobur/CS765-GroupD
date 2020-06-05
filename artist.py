@@ -17,32 +17,46 @@ class Artist:
             self.artist = turtle.Turtle()
         
         self.radius = r
+
+    ''' --------------Setters for build method (head)-------------- '''
+
+    def x_position(self, x):
+        self.x_pos = x
+        return self
+
+    def y_position(self, y):
+        self.y_pos = y
+        return self
+
+    def colour(self, colour):
+        self.col = colour
+        return self
+
+    ''' --------------Setters for build method (tail)-------------- '''
         
     # Method for drawing
     # This method will always draw a circle filled in by that colour for a 
     # for a given position.
     # Parameters:
-    #   gx = x coordinate
-    #   gy = y coordinate
-    #   colour = colour of the element
-    def draw(self, gx, gy, colour):
+    #   ...
+    def draw(self):
         turtle.tracer(0, 0)
 
         # fill in the colour
-        self.fill_colour(colour)
+        self.fill_colour()
         
         # draw the body
-        self.draw_body(gx, gy)
+        self.draw_body()
         
         # draw in other details if necessary
         self.draw_detail()
         turtle.update()
         
     # Method for drawing the body of the element as a circle
-    def draw_body(self, gx, gy):
+    def draw_body(self):
         # draw the element itself as a circle
         self.artist.penup()
-        self.artist.goto(gx, gy)
+        self.artist.goto(self.x_pos, self.y_pos)
         self.artist.pendown()
         self.artist.shape("circle")
         self.artist.shapesize(self.radius*2, self.radius*2)
@@ -50,8 +64,8 @@ class Artist:
     # Method for filling in the colour of the element.
     # This is a template method approach for Artist#draw() invoked at the start
     # of the method
-    def fill_colour(self, colour):
-        self.artist.fillcolor(colour)
+    def fill_colour(self):
+        self.artist.fillcolor(self.col)
         
     # Method for drawing in other necessary detail for the element.
     # This is a template method approach for Artist#draw() invoked after the 

@@ -14,32 +14,47 @@ class RobotArtist(Artist):
     #   r: radius for the GUI element
     def __init__(self, r):
         super().__init__(r)
+        self.x_pos = 0
+        self.y_pos = 0
+        self.is_alive = True
+        self.ori = 0
+
+    ''' --------------Setters for build method (head)-------------- '''
+
+    def alive(self, alive):
+        self.is_alive = alive
+        return self
+
+    def orientation(self, ori):
+        self.ori = ori
+        return self
+
+    ''' --------------Setters for build method (tail)-------------- '''
         
     # Method for drawing the robot
     # Parameters:
-    #   gx: see Artist#draw()
-    #   gy: see Artist#draw()
-    #   is_alive: a boolean to check if the robot is alive
-    def draw(self, gx, gy, is_alive, dir):
+    #   ...
+    def draw(self):
         turtle.tracer(0, 0)
         # fill in the colour
-        self.fill_colour(is_alive)
+        self.fill_colour()
         
         # draw the main body
-        self.draw_body(gx, gy)
+        self.draw_body()
         
         # draw the details
-        self.draw_detail(gx, gy, dir)
+        self.draw_detail()
         turtle.update()
         
     # Method for filling in the colour of the element
     # Parameters:
-    #   is_alive: a boolean to check if the robot is alive
-    def fill_colour(self, is_alive):
-        if is_alive:
-            super().fill_colour("green")
+    #   ...
+    def fill_colour(self):
+        if self.is_alive:
+            self.col = "green"
         else:
-            super().fill_colour("brown")
+            self.col = "brown"
+        super().fill_colour()
 
     # Method for drawing in the details of the robot.
     # These details include:
@@ -49,22 +64,22 @@ class RobotArtist(Artist):
     #   food/water source remaining
     #   smell signature
     #   possibly genes if there is time
-    def draw_detail(self, gx, gy, dir):
-        self.draw_orientation(gx, gy, dir)
+    def draw_detail(self):
+        self.draw_orientation()
             
     # Method for drawing the direction arrow of the robot
     # Parameters:
-    #   dir: the direction at which the robot is heading
-    def draw_orientation(self, gx, gy, dir):
+    #   ...
+    def draw_orientation(self):
         dis = self.radius * 30
         t = turtle.Turtle()
         t.radians()
         t.pencolor("white")
         t.pensize(3)
         t.penup()
-        t.goto(gx, gy)
+        t.goto(self.x_pos, self.y_pos)
         # Move ahead of the robot and save the position
-        t.setheading(dir)
+        t.setheading(self.ori)
         t.forward(dis)
         t.pendown()
         (x, y) = t.position()
@@ -76,12 +91,16 @@ class RobotArtist(Artist):
         t.penup()
         # right arrow
         t.goto(x, y)
-        t.setheading(dir)
+        t.setheading(self.ori)
         t.pendown()
         t.right(22 * math.pi/36)
         t.forward(self.radius * 20)
         t.penup()
 
+    # Method for drawing the sense onto the robot
+    #
+    def draw_sensors(self):
+        pass
     
         
     

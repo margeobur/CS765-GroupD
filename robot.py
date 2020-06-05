@@ -108,6 +108,7 @@ class Robot:
 		if self.is_alive:
 			alpha = 255
 		
-		self.artist.draw(self.position[0], self.position[1], self.is_alive, self.alpha)
+		self.artist.x_position(self.position[0]).y_position(self.position[1]).alive(self.is_alive).orientation(self.alpha)
+		self.artist.draw()
 
 
