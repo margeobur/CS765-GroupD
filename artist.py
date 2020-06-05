@@ -15,6 +15,7 @@ class Artist:
             self.artist = turtle.Turtle()
         except:
             self.artist = turtle.Turtle()
+        
         self.radius = r
         
     # Method for drawing
@@ -25,6 +26,8 @@ class Artist:
     #   gy = y coordinate
     #   colour = colour of the element
     def draw(self, gx, gy, colour):
+        turtle.tracer(0, 0)
+
         # fill in the colour
         self.fill_colour(colour)
         
@@ -33,11 +36,11 @@ class Artist:
         
         # draw in other details if necessary
         self.draw_detail()
+        turtle.update()
         
     # Method for drawing the body of the element as a circle
     def draw_body(self, gx, gy):
         # draw the element itself as a circle
-        self.artist.speed(10)
         self.artist.penup()
         self.artist.goto(gx, gy)
         self.artist.pendown()

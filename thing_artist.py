@@ -4,6 +4,7 @@ the artist.py file. If need be, check the Artist class for more detail.
 '''
 
 from artist import Artist
+import turtle
 
 class ThingArtist(Artist):
     
@@ -20,6 +21,8 @@ class ThingArtist(Artist):
     #   gy: see Artist#draw()
     #   is_alive: a boolean to check if the robot is alive
     def draw(self, gx, gy):
+        turtle.tracer(0, 0)
+
         # fill in the colour
         self.fill_colour()
         
@@ -28,6 +31,7 @@ class ThingArtist(Artist):
         
         # draw the details
         self.draw_detail()
+        turtle.update()
         
     # Method for filling in the colour of the element
     # Parameters:

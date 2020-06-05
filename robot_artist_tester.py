@@ -6,6 +6,7 @@ from artist_tester import ArtistTester
 from robot_artist import RobotArtist
 import random
 import math
+import turtle
 
 class RobotArtistTester(ArtistTester):
     # Constructor

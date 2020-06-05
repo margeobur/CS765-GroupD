@@ -21,6 +21,7 @@ class RobotArtist(Artist):
     #   gy: see Artist#draw()
     #   is_alive: a boolean to check if the robot is alive
     def draw(self, gx, gy, is_alive, dir):
+        turtle.tracer(0, 0)
         # fill in the colour
         self.fill_colour(is_alive)
         
@@ -29,6 +30,7 @@ class RobotArtist(Artist):
         
         # draw the details
         self.draw_detail(gx, gy, dir)
+        turtle.update()
         
     # Method for filling in the colour of the element
     # Parameters:
