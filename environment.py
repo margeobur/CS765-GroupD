@@ -34,12 +34,14 @@ class Thing:
         # alpha = int(180 * self.amount)
         # Not sure the above line is needed anymore.
         t = turtle.Turtle()
+        t.speed(0)
         t.fillcolor(self.COLOUR)
         t.penup()
         t.goto(self.position[0], self.position[1])
         t.pendown()
         t.shape("circle")
         t.shapesize(self.radius * 2, self.radius * 2)
+        turtle.update()
 
     def update(self):
         if not self.is_gone():

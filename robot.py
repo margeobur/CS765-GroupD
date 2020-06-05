@@ -54,7 +54,7 @@ class Robot:
 
 	def update(self):
 		self.l_motor, self.r_motor = self.brain.iterate(self.sensor_values)
-		max_speed = 10.0
+		max_speed = 20.0
 
 		if self.is_alive:
 			self.position += simulation_state.timestep * polar2vec(self.angle) * (self.l_motor + self.r_motor) * max_speed
@@ -65,6 +65,7 @@ class Robot:
 			self.water_battery = np.clip(self.food_battery - 0.04 * simulation_state.timestep, 0.0, 1.0)
 
 		if self.food_battery == 0.0 or self.water_battery == 0.0:
+			print("hungry" if self.food_battery == 0 else "thirsty")
 			self.is_alive = False
 			self.food_battery = 0.0
 			self.water_battery = 0.0
@@ -92,6 +93,7 @@ class Robot:
 	def draw(self):
 		alpha = 127
 		t = turtle.Turtle()
+		t.speed(0)
 		if self.is_alive:
 			alpha = 255
 		t.fillcolor(64, 64, 64)
@@ -104,6 +106,7 @@ class Robot:
 		t.pendown()
 		t.shape("circle")
 		t.shapesize(self.radius*2, self.radius*2)
+		turtle.update()
 		# hx = math.cos(self.angle) * self.radius
 		# hy = math.sin(self.angle) * self.radius
 		# t.penup()

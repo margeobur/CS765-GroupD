@@ -149,7 +149,7 @@ class SmellSignatureGene(ListGene):
 
 
 class DynamicListGene(ListGene):
-    def __init__(self, ElementClass, addition_probability=0.001, removal_probability=0.001, init_size_range=(1, 10)):
+    def __init__(self, ElementClass, addition_probability=0.001, removal_probability=0.001, init_size_range=(1, 4)):
         self.ElementClass = ElementClass
         self.addition_probability = addition_probability
         self.removal_probability = removal_probability
@@ -252,7 +252,7 @@ class PiecemealMappingGene(DynamicListGene):
 class ThingGene(Genetic):
     def __init__(self):
         super().__init__()
-        self.amount = FloatGene(bounds=(1, 4))
+        self.amount = FloatGene(bounds=(1, 3))
         self.smell_signature = SmellSignatureGene()
 
     def incompatibility_with(self, other_thing):

@@ -24,7 +24,7 @@ def main():
     win.bgcolor("black")
     win.title("Arena")
     win.colormode(255)
-    simulation_state.env.draw()
+    turtle.tracer(0, 0)
     evolve_mode.main()
     win.mainloop()
 

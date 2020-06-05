@@ -1,4 +1,6 @@
 import random
+import turtle
+
 import numpy as np
 
 from environment import Environment
@@ -22,11 +24,14 @@ def run_trials(environment, robot):
     fitness = 0
     for _ in range(N_TRIALS):
         environment.reset()
+        turtle.resetscreen()
+        environment.draw()  # TODO: to remove
         robot.set_environment(environment)
         robot.reset()
 
         for time in range(TRIAL_LENGTH):
             if time % 100 == 0:
+                robot.draw()  # TODO remove
                 print(f"time: {time}")
             if robot.is_alive:
                 robot.calculate_change()
