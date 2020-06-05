@@ -4,6 +4,8 @@ This is the robot artist tester. It will extend the ArtistTester class.
 
 from artist_tester import ArtistTester
 from robot_artist import RobotArtist
+import random
+import math
 
 class RobotArtistTester(ArtistTester):
     # Constructor
@@ -14,7 +16,8 @@ class RobotArtistTester(ArtistTester):
     # In this case it is a single robot
     def draw_element(self):
         artist = RobotArtist(1)
-        artist.draw(250, 250, True)
+        dir = random.uniform(0, 2.0 * math.pi)
+        artist.draw(250, 250, True, dir)
 
 if __name__ == "__main__":
     RobotArtistTester()

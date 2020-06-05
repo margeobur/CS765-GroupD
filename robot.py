@@ -12,7 +12,7 @@ from robot_artist import RobotArtist
 class Robot:
 	def __init__(self, genome):
 		# Radius of the robot
-		self.radius = 1
+		self.radius = 1.0
 
 		# Robot's x, y position and heading angle
 		self.position = np.vstack([
@@ -108,6 +108,6 @@ class Robot:
 		if self.is_alive:
 			alpha = 255
 		
-		self.artist.draw(self.position[0], self.position[1], self.is_alive)
+		self.artist.draw(self.position[0], self.position[1], self.is_alive, self.alpha)
 
 
