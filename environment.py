@@ -4,6 +4,8 @@ import simulation_state
 import turtle
 import itertools
 
+from environment_artist import EnvironmentArtist
+from thing_artist import ThingArtist
 
 class Thing:
     COLOUR = "black"
@@ -18,6 +20,8 @@ class Thing:
         self.radius = 1.0
         self.smell_signature = gene.smell_signature.flatten()
 
+        self.artist = ThingArtist(1, self.COLOUR)
+
         self.reset()
 
         if nx is not None and ny is not None:
@@ -31,15 +35,7 @@ class Thing:
         ])
 
     def draw(self):
-        # alpha = int(180 * self.amount)
-        # Not sure the above line is needed anymore.
-        t = turtle.Turtle()
-        t.fillcolor(self.COLOUR)
-        t.penup()
-        t.goto(self.position[0], self.position[1])
-        t.pendown()
-        t.shape("circle")
-        t.shapesize(self.radius * 2, self.radius * 2)
+        self.artist.draw(self.position[0], self.position[1])
 
     def update(self):
         if not self.is_gone():
@@ -107,6 +103,7 @@ class Environment:
                 self.traps.append(Trap(gene))
 
         self.thing_signatures = np.array([thing.smell_signature for thing in self.everything()]).transpose()
+        # self.artist = EnvironmentArtist(1, foods, waters, traps)
 
     def everything(self):
         return itertools.chain(self.foods, self.waters, self.traps)

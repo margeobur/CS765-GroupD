@@ -10,7 +10,11 @@ class Artist:
     # Constructor
     # Parameters: Takes in the radius for the GUI element
     def __init__(self, r):
-        self.artist = turtle.Turtle()
+        # TODO: Jin: I know it looks hacky, but it works on Spyder
+        try:
+            self.artist = turtle.Turtle()
+        except:
+            self.artist = turtle.Turtle()
         self.radius = r
         
     # Method for drawing
@@ -33,6 +37,7 @@ class Artist:
     # Method for drawing the body of the element as a circle
     def draw_body(self, gx, gy):
         # draw the element itself as a circle
+        self.artist.speed(10)
         self.artist.penup()
         self.artist.goto(gx, gy)
         self.artist.pendown()
