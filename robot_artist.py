@@ -33,7 +33,7 @@ class RobotArtist(Artist):
         self.sense_angs = sense_angs
         return self
     
-    def smell_signiture(self, smell_sigs):
+    def smell_signatures(self, smell_sigs):
         self.smell_sigs = smell_sigs
         return self
 
@@ -125,7 +125,7 @@ class RobotArtist(Artist):
             t.pencolor("white")
             t.fillcolor("black")
             t.pensize(2)
-            t.shapesize(0.4, 0.2)
+            t.shapesize(0.6, 0.3)
             # go to where the robot is
             t.penup()
             t.goto(self.x_pos, self.y_pos)

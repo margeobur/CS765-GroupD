@@ -111,7 +111,8 @@ class Robot:
 		self.artist.x_position(self.position[0]).y_position(
 			self.position[1]).alive(self.is_alive).orientation(
 				self.alpha).sensor_angles(self.sensor_angles).food_battery(
-					self.food_battery).water_battery(self.water_battery)
+					self.food_battery).water_battery(self.water_battery).smell_signatures(
+						self.sensor_signatures)
 		self.artist.draw()
 
 
