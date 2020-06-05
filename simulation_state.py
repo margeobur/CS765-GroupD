@@ -5,7 +5,5 @@ timestep = 0.04
 iteration = 0
 
 pop_size = 30
-env = None
 environment_genomes = []
 robot_genomes = []
-robots = []

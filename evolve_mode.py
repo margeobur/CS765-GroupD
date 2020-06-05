@@ -1,76 +1,114 @@
 import random
+import numpy as np
+
+from environment import Environment
 from robot import Robot
 import simulation_state
 
-generation = 0
 tournament = 0
 
-trial_length = 1500
-n_trials = 1
-fitnesses = [0] * simulation_state.pop_size
+TRIAL_LENGTH = 1500
+N_TRIALS = 1
+NUM_SAMPLES = 4
+environment_fitnesses = np.zeros(simulation_state.pop_size)
+robot_fitnesses = np.zeros(simulation_state.pop_size)
 history_size = 500
 
 mean_fitness_history = []
 peak_fitness_history = []
 
 
-def iterate_evolve():
-    global generation
+def run_trials(environment, robot):
+    fitness = 0
+    for _ in range(N_TRIALS):
+        environment.reset()
+        robot.set_environment(environment)
+        robot.reset()
+
+        for time in range(TRIAL_LENGTH):
+            if time % 100 == 0:
+                print(f"time: {time}")
+            if robot.is_alive:
+                robot.calculate_change()
+                robot.update()
+                fitness += (robot.food_battery + robot.water_battery) / 2.0 / TRIAL_LENGTH
+            environment.update()
+            if not robot.is_alive:
+                print("dead")
+                break
+
+    return fitness / N_TRIALS
+
+
+def select_and_crossover(genome_a, genome_b, fitness_a, fitness_b):
+    winner_genome = genome_a
+    loser_genome = genome_b
+
+    if fitness_a > fitness_b:
+        winner_genome, loser_genome = loser_genome, winner_genome
+
+    loser_genome.crossover(winner_genome)
+    loser_genome.mutate()
+
+
+def iterate_evolve_robot():
     global tournament
 
     tournament += 1
-    a_id = random.randrange(0, simulation_state.pop_size)
-    b_id = random.randrange(0, simulation_state.pop_size)
+    a_id, b_id = random.sample(range(len(simulation_state.robot_genomes)), 2)
 
-    while a_id == b_id:
-        random.randrange(0, simulation_state.pop_size)
+    robot_genome_a = simulation_state.robot_genomes[a_id]
+    robot_genome_b = simulation_state.robot_genomes[b_id]
+    robot_a = Robot(robot_genome_a)
+    robot_b = Robot(robot_genome_b)
 
-    a = Robot(simulation_state.robot_genomes[a_id])
-    a.set_environment(simulation_state.env)
-    a.draw()
-    b = Robot(simulation_state.robot_genomes[b_id])
-    b.set_environment(simulation_state.env)
-    b.draw()
+    fitness_a = 0
+    fitness_b = 0
 
-    a_fitness = 0
-    b_fitness = 0
+    for environment_genome in random.sample(simulation_state.environment_genomes, NUM_SAMPLES):
+        environment = Environment(environment_genome)
+        fitness_a += run_trials(environment, robot_a)
+        fitness_b += run_trials(environment, robot_b)
 
-    for i in range(0, n_trials):
-        simulation_state.env.reset()
-        a.reset()
-        b.reset()
+    fitness_a /= NUM_SAMPLES
+    fitness_b /= NUM_SAMPLES
 
-    for i in range(0, trial_length):
-        if a.is_alive:
-            a.calculate_change()
-            a.update()
-            a_fitness += (a.food_battery + a.water_battery) / 2.0 / trial_length
-        if b.is_alive:
-            b.calculate_change()
-            b.update()
-            b_fitness += (b.food_battery + a.water_battery) / 2.0 / trial_length
-        simulation_state.env.update()
-        if not a.is_alive and not b.is_alive:
-            break
+    robot_fitnesses[a_id] = fitness_a
+    robot_fitnesses[b_id] = fitness_b
 
-    a_fitness /= n_trials
-    b_fitness /= n_trials
+    select_and_crossover(robot_genome_a, robot_genome_b, fitness_a, fitness_b)
 
-    fitnesses[a_id] = a_fitness
-    fitnesses[b_id] = b_fitness
 
-    winner_id = b_id
-    loser_id = a_id
+def iterate_evolve_environment():
+    global tournament
 
-    if fitnesses[a_id] > fitnesses[b_id]:
-        winner_id = a_id
-        loser_id = b_id
+    tournament += 1
+    a_id, b_id = random.sample(range(len(simulation_state.environment_genomes)), 2)
 
-    simulation_state.robot_genomes[loser_id].crossover(simulation_state.robot_genomes[winner_id])
+    environment_genome_a = simulation_state.environment_genomes[a_id]
+    environment_genome_b = simulation_state.environment_genomes[b_id]
+    environment_a = Environment(environment_genome_a)
+    environment_b = Environment(environment_genome_b)
+
+    fitness_a = 0
+    fitness_b = 0
+
+    for robot_genome in random.sample(simulation_state.robot_genomes, NUM_SAMPLES):
+        robot = Robot(robot_genome)
+        fitness_a += run_trials(environment_a, robot)
+        fitness_b += run_trials(environment_b, robot)
+
+    fitness_a /= NUM_SAMPLES
+    fitness_b /= NUM_SAMPLES
+
+    robot_fitnesses[a_id] = fitness_a
+    robot_fitnesses[b_id] = fitness_b
+
+    select_and_crossover(environment_genome_a, environment_genome_b, fitness_a, fitness_b)
 
 
 def main():
     global tournament
     tournament = 1
-    iterate_evolve()
-
+    while True:
+        random.choice([iterate_evolve_robot, iterate_evolve_environment])()
