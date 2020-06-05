@@ -1,12 +1,12 @@
 '''
-This is the artist class for the environment. There will be a single turtle for 
-the environment, that will draw all the "things" in it.
+This is the artist class for the environment. It will contain an artist for all things
+in the environment
 '''
 
-from artist import Artist
+from thing_artist import ThingArtist
 import turtle
 
-class EnvironmentArtist(Artist):
+class EnvironmentArtist():
     
     # Constructor
     # Parameters:
@@ -15,11 +15,9 @@ class EnvironmentArtist(Artist):
     #   waters: array of waters in the environment
     #   traps: array of traps in the environement
     def __init__(self, r, foods, waters, traps):
-        super().__init__(r)
-        self.foods = []
-        self.waters = []
-        self.traps = []
-        self.setup(foods, waters, traps)
+        self.foods = foods
+        self.waters = waters
+        self.traps = traps
         
     # Method for drawing all the things in the environment
     def draw_all(self):
