@@ -8,7 +8,8 @@ from artist import Artist
 class RobotArtist(Artist):
     
     # Constructor
-    # Parameters: Takes in the radius for the GUI element
+    # Parameters: 
+    #   r: radius for the GUI element
     def __init__(self, r):
         super().__init__(r)
         
