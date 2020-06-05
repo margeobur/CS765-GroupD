@@ -29,6 +29,10 @@ class RobotArtist(Artist):
         self.ori = ori
         return self
 
+    def sensor_angles(self, sense_angs):
+        self.sense_angs = sense_angs
+        return self
+
     ''' --------------Setters for build method (tail)-------------- '''
         
     # Method for drawing the robot
@@ -66,6 +70,7 @@ class RobotArtist(Artist):
     #   possibly genes if there is time
     def draw_detail(self):
         self.draw_orientation()
+        self.draw_sensors()
             
     # Method for drawing the direction arrow of the robot
     # Parameters:
@@ -96,11 +101,31 @@ class RobotArtist(Artist):
         t.right(22 * math.pi/36)
         t.forward(self.radius * 20)
         t.penup()
+        t.goto(0,0)
 
     # Method for drawing the sense onto the robot
-    #
+    # Parameters:
     def draw_sensors(self):
-        pass
-    
+        dis = self.radius * 20
+        for sa in self.sense_angs:
+            t = turtle.Turtle()
+            t.radians()
+            t.pencolor("white")
+            t.fillcolor("black")
+            t.pensize(2)
+            t.shapesize(0.4, 0.2)
+            # go to where the robot is
+            t.penup()
+            t.goto(self.x_pos, self.y_pos)
+            # turn to the direction of where the sensor is
+            t.setheading(self.ori + sa)
+            # go to the edge of the robot
+            t.forward(dis)
+            t.pendown()
+            # draw a quadralateral
+            t.shape("square")
+
+
+
         
     

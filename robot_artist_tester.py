@@ -18,7 +18,8 @@ class RobotArtistTester(ArtistTester):
     def draw_element(self):
         artist = RobotArtist(1)
         dir = random.uniform(0, 2.0 * math.pi)
-        artist.x_position(250).y_position(250).alive(True).orientation(dir)
+        sensor_angles = [dir + math.pi, dir + math.pi/2, dir - math.pi/2]
+        artist.x_position(250).y_position(250).alive(True).orientation(dir).sensor_angles(sensor_angles)
         artist.draw()
 
 if __name__ == "__main__":
