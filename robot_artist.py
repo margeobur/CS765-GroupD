@@ -32,6 +32,18 @@ class RobotArtist(Artist):
     def sensor_angles(self, sense_angs):
         self.sense_angs = sense_angs
         return self
+    
+    def smell_signiture(self, smell_sigs):
+        self.smell_sigs = smell_sigs
+        return self
+
+    def water_battery(self, water_batts):
+        self.water_batts = water_batts
+        return self
+    
+    def food_battery(self, food_batts):
+        self.food_batts = food_batts
+        return self
 
     ''' --------------Setters for build method (tail)-------------- '''
         
@@ -39,25 +51,23 @@ class RobotArtist(Artist):
     # Parameters:
     #   ...
     def draw(self):
-        turtle.tracer(0, 0)
-        # fill in the colour
-        self.fill_colour()
+        if self.is_alive:
+            turtle.tracer(0, 0)
+            # fill in the colour
+            self.fill_colour()
         
-        # draw the main body
-        self.draw_body()
+            # draw the main body
+            self.draw_body()
         
-        # draw the details
-        self.draw_detail()
-        turtle.update()
+            # draw the details
+            self.draw_detail()
+            turtle.update()
         
     # Method for filling in the colour of the element
     # Parameters:
     #   ...
     def fill_colour(self):
-        if self.is_alive:
-            self.col = "green"
-        else:
-            self.col = "brown"
+        self.col = "green"
         super().fill_colour()
 
     # Method for drawing in the details of the robot.
@@ -71,6 +81,7 @@ class RobotArtist(Artist):
     def draw_detail(self):
         self.draw_orientation()
         self.draw_sensors()
+        self.draw_batteries()
             
     # Method for drawing the direction arrow of the robot
     # Parameters:
@@ -101,10 +112,11 @@ class RobotArtist(Artist):
         t.right(22 * math.pi/36)
         t.forward(self.radius * 20)
         t.penup()
-        t.goto(0,0)
+        t.hideturtle()
 
-    # Method for drawing the sense onto the robot
+    # Method for drawing the senses on the robot
     # Parameters:
+    #   ...
     def draw_sensors(self):
         dis = self.radius * 20
         for sa in self.sense_angs:
@@ -124,6 +136,45 @@ class RobotArtist(Artist):
             t.pendown()
             # draw a quadralateral
             t.shape("square")
+
+    # Method for drawing the battery level on the robot
+    # Parameters:
+    #   ...
+    def draw_batteries(self):
+        dis = self.radius * 7
+        size = self.radius * 10
+
+        # draw food battery
+        tf = turtle.Turtle()
+        tf.radians()
+        tf.pencolor("black")
+        tf.fillcolor("yellow")
+        tf.pensize(2)
+        tf.shapesize(self.food_batts, 0.5)
+        # go to robot's right hand side body
+        tf.penup()
+        tf.goto(self.x_pos, self.y_pos)
+        tf.setheading(self.ori)
+        tf.right(math.pi/2)
+        tf.forward(dis)
+        tf.pendown()
+        tf.shape("square")
+
+        # draw water battery
+        tw = turtle.Turtle()
+        tw.radians()
+        tw.pencolor("black")
+        tw.fillcolor("blue")
+        tw.pensize(2)
+        tw.shapesize(self.water_batts, 0.5)
+        # go to robot's left hand side body
+        tw.penup()
+        tw.goto(self.x_pos, self.y_pos)
+        tw.setheading(self.ori)
+        tw.left(math.pi/2)
+        tw.forward(dis)
+        tw.pendown()
+        tw.shape("square")
 
 
 
