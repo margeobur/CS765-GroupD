@@ -17,7 +17,7 @@ class Robot:
 			random.uniform(0, simulation_state.arena_width),
 			random.uniform(0, simulation_state.arena_width)
 		])
-		self.angle = random.uniform(0, 2.0 * math.PI)
+		self.angle = random.uniform(0, 2.0 * math.pi)
 
 		self.food_battery = 1.0
 		self.water_battery = 1.0
