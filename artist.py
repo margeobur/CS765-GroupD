@@ -17,6 +17,9 @@ class Artist:
             self.artist = turtle.Turtle()
         
         self.radius = r
+        self.x_pos = 0
+        self.y_pos = 0
+        self.col = "black"
 
     ''' --------------Setters for build method (head)-------------- '''
 
