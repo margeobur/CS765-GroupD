@@ -25,6 +25,9 @@ def main():
     win.bgcolor("black")
     win.title("Arena")
     win.colormode(255)
+    win.tracer(0)
+    win.delay(16)
+    win.update()
     evolve_mode.main()
     win.mainloop()
     

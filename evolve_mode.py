@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import turtle
 
 from environment import Environment
 from robot import Robot
@@ -21,12 +22,16 @@ peak_fitness_history = []
 def run_trials(environment, robot):
     fitness = 0
     for _ in range(N_TRIALS):
+        turtle.resetscreen()
         environment.reset()
         robot.set_environment(environment)
         robot.reset()
 
         for time in range(TRIAL_LENGTH):
-            if time % 100 == 0:
+            if time % 10 == 0:
+                environment.draw()
+                robot.draw()
+                turtle.update()
                 print(f"time: {time}")
             if robot.is_alive:
                 robot.calculate_change()
@@ -36,6 +41,9 @@ def run_trials(environment, robot):
             if not robot.is_alive:
                 print("dead")
                 break
+
+        robot.clear()
+        environment.clear()
 
     return fitness / N_TRIALS
 

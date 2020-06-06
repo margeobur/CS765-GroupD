@@ -6,6 +6,7 @@ the artist.py file. If need be, check the Artist class for more detail.
 from artist import Artist
 import turtle
 import math
+import itertools
 
 class RobotArtist(Artist):
     
@@ -23,6 +24,12 @@ class RobotArtist(Artist):
         self.water_batts = None
         self.food_batts = None
 
+        self.orientation_turtle = turtle.Turtle()
+        self.water_battery_turtle = turtle.Turtle()
+        self.food_battery_turtle = turtle.Turtle()
+        self.sensor_turtles = []
+        self.sensor_sig_turtles = []
+
     ''' --------------Setters for build method (head)-------------- '''
 
     def alive(self, alive):
@@ -30,11 +37,13 @@ class RobotArtist(Artist):
         return self
 
     def orientation(self, ori):
-        self.ori = ori
+        self.ori = ori + math.pi / 2
         return self
 
     def sensor_angles(self, sense_angs):
         self.sense_angs = sense_angs
+        self.sensor_turtles = [turtle.Turtle() for _ in sense_angs]
+        self.sensor_sig_turtles = [[turtle.Turtle() for _ in range(4)] for _ in sense_angs]
         return self
     
     def smell_signatures(self, smell_sigs):
@@ -55,8 +64,8 @@ class RobotArtist(Artist):
     # Parameters:
     #   ...
     def draw(self):
+        self.artist.clear()
         if self.is_alive:
-            turtle.tracer(0, 0)
             # fill in the colour
             self.fill_colour()
         
@@ -65,8 +74,7 @@ class RobotArtist(Artist):
         
             # draw the details
             self.draw_detail()
-            turtle.update()
-        
+
     # Method for filling in the colour of the element
     # Parameters:
     #   ...
@@ -95,7 +103,8 @@ class RobotArtist(Artist):
     #   ...
     def draw_orientation(self):
         dis = self.radius * 30
-        t = turtle.Turtle()
+        t = self.orientation_turtle
+        t.clear()
         t.radians()
         t.pencolor("white")
         t.pensize(3)
@@ -127,8 +136,8 @@ class RobotArtist(Artist):
     #   ...
     def draw_sensors(self):
         dis = self.radius * 22
-        for sa in self.sense_angs:
-            t = turtle.Turtle()
+        for sa, t in zip(self.sense_angs, self.sensor_turtles):
+            t.clear()
             t.radians()
             t.pencolor("white")
             t.fillcolor("black")
@@ -160,7 +169,7 @@ class RobotArtist(Artist):
         dis = self.radius * 22
 
         counter = 0
-        for sa in self.sense_angs:
+        for sa, turtles in zip(self.sense_angs, self.sensor_sig_turtles):
             # calculate xi for colours 
             x_list = []
             for s in self.smell_sigs[counter]:
@@ -168,8 +177,8 @@ class RobotArtist(Artist):
                 x_list.append(x)
 
             # create the turtles for each of the sensor colours
-            for i in range(0, 4):
-                t = turtle.Turtle()
+            for i, t in zip(range(0, 4), turtles):
+                t.clear()
                 t.radians()
                 t.pencolor("white")
                 t.pensize(0.3)
@@ -227,7 +236,8 @@ class RobotArtist(Artist):
         size = self.radius * 10
 
         # draw food battery
-        tf = turtle.Turtle()
+        tf = self.food_battery_turtle
+        tf.clear()
         tf.radians()
         tf.pencolor("black")
         tf.fillcolor("yellow")
@@ -243,7 +253,8 @@ class RobotArtist(Artist):
         tf.shape("square")
 
         # draw water battery
-        tw = turtle.Turtle()
+        tw = self.water_battery_turtle
+        tw.clear()
         tw.radians()
         tw.pencolor("black")
         tw.fillcolor("blue")
@@ -258,7 +269,10 @@ class RobotArtist(Artist):
         tw.pendown()
         tw.shape("square")
 
-
-
-        
-    
+    def clear(self):
+        super().clear()
+        self.water_battery_turtle.clear()
+        self.food_battery_turtle.clear()
+        self.orientation_turtle.clear()
+        for t in itertools.chain(self.sensor_turtles, *self.sensor_sig_turtles):
+            t.clear()

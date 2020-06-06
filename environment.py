@@ -35,11 +35,18 @@ class Thing:
         ])
 
     def draw(self):
-        self.artist.x_position(self.position[0]).y_position(
-            self.position[1]).colour(self.COLOUR).amount_left(
-                self.amount_left).smell_signature(self.smell_signature).amount_full(
-                    self.amount_when_full).amount_left(self.amount_left)
+        self.artist\
+            .x_position(self.position[0])\
+            .y_position(self.position[1])\
+            .colour(self.COLOUR)\
+            .amount_left(self.amount_left)\
+            .smell_signature(self.smell_signature)\
+            .amount_full(self.amount_when_full)\
+            .amount_left(self.amount_left)
         self.artist.draw()
+
+    def clear(self):
+        self.artist.clear()
 
     def update(self):
         if not self.is_gone():
@@ -133,3 +140,7 @@ class Environment:
     def draw(self):
         for thing in self.everything():
             thing.draw()
+
+    def clear(self):
+        for thing in self.everything():
+            thing.clear()

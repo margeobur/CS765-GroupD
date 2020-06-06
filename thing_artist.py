@@ -16,6 +16,7 @@ class ThingArtist(Artist):
         super().__init__(r)
         self.volume = 0
         self.smell_sigs = None
+        self.sensor_sig_turtles = [turtle.Turtle() for _ in range(4)]
 
     ''' --------------Setters for build method (head)-------------- '''
 
@@ -37,7 +38,7 @@ class ThingArtist(Artist):
     # Parameters:
     #   ...
     def draw(self):
-        turtle.tracer(0, 0)
+        self.artist.clear()
 
         # fill in the colour
         self.fill_colour()
@@ -47,8 +48,7 @@ class ThingArtist(Artist):
         
         # draw the details
         self.draw_detail()
-        turtle.update()
-        
+
     # Method for filling in the colour of the element
     # Parameters:
     #   ...
@@ -99,8 +99,8 @@ class ThingArtist(Artist):
             x_list.append(x)
 
         # create the turtles for each of the sensor colours
-        for i in range(0, 4):
-            t = turtle.Turtle()
+        for i, t in zip(range(0, 4), self.sensor_sig_turtles):
+            t.clear()
             t.radians()
             t.pencolor("black")
             t.pensize(0.3)
@@ -145,3 +145,8 @@ class ThingArtist(Artist):
                 t.fillcolor(255 - x_list[2], x_list[3], x_list[4])
             t.pendown()
             t.shape("square")
+
+    def clear(self):
+        super().clear()
+        for t in self.sensor_sig_turtles:
+            t.clear()

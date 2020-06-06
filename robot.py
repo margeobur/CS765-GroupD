@@ -46,7 +46,8 @@ class Robot:
 		self.smell_alignment = None
 
 		# An artist for handling the GUI
-		self.artist = RobotArtist(self.radius)
+		self.artist = RobotArtist(self.radius)\
+			.sensor_angles(self.sensor_angles)
 
 	def reset(self):
 		self.position = np.vstack([
@@ -112,12 +113,18 @@ class Robot:
 		if self.is_alive:
 			alpha = 255
 		
-		self.artist.x_position(self.position[0][0]).y_position(
-			self.position[1][0]).alive(self.is_alive).orientation(
-				self.angle).sensor_angles(self.sensor_angles).food_battery(
-					self.food_battery).water_battery(self.water_battery).smell_signatures(
-						self.sensor_signatures.transpose())
+		self.artist\
+			.x_position(self.position[0][0])\
+			.y_position(self.position[1][0])\
+			.alive(self.is_alive)\
+			.orientation(self.angle)\
+			.food_battery(self.food_battery)\
+			.water_battery(self.water_battery)\
+			.smell_signatures(self.sensor_signatures.transpose())
 		self.artist.draw()
+
+	def clear(self):
+		self.artist.clear()
 
 
 def test():

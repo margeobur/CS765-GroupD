@@ -77,3 +77,7 @@ class Artist:
     # -- TO BE IMPLEMENTED BY CONCRETE CHILDREN CLASSES --
     def draw_detail(self):
         pass
+
+    def clear(self):
+        self.artist.clear()
+        self.artist.hideturtle()
