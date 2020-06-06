@@ -19,12 +19,14 @@ mean_fitness_history = []
 peak_fitness_history = []
 
 
-def run_trials(environment, robot):
+def run_trials(environment_genome, robot_genome):
     fitness = 0
+    environment = Environment(environment_genome)
+    robot = Robot(robot_genome)
+    robot.set_environment(environment)
     for _ in range(N_TRIALS):
         turtle.resetscreen()
         environment.reset()
-        robot.set_environment(environment)
         robot.reset()
 
         for time in range(TRIAL_LENGTH):
@@ -38,11 +40,12 @@ def run_trials(environment, robot):
                 fitness += (robot.food_battery + robot.water_battery) / 2.0 / TRIAL_LENGTH
             environment.update()
             if not robot.is_alive:
-                print("dead")
                 break
-
         robot.clear()
         environment.clear()
+
+    robot.destroy()
+    environment.destroy()
 
     return fitness / N_TRIALS
 
@@ -66,16 +69,13 @@ def iterate_evolve_robot():
 
     robot_genome_a = simulation_state.robot_genomes[a_id]
     robot_genome_b = simulation_state.robot_genomes[b_id]
-    robot_a = Robot(robot_genome_a)
-    robot_b = Robot(robot_genome_b)
 
     fitness_a = 0
     fitness_b = 0
 
     for environment_genome in random.sample(simulation_state.environment_genomes, NUM_SAMPLES):
-        environment = Environment(environment_genome)
-        fitness_a += run_trials(environment, robot_a)
-        fitness_b += run_trials(environment, robot_b)
+        fitness_a += run_trials(environment_genome, robot_genome_a)
+        fitness_b += run_trials(environment_genome, robot_genome_b)
 
     fitness_a /= NUM_SAMPLES
     fitness_b /= NUM_SAMPLES
@@ -94,16 +94,13 @@ def iterate_evolve_environment():
 
     environment_genome_a = simulation_state.environment_genomes[a_id]
     environment_genome_b = simulation_state.environment_genomes[b_id]
-    environment_a = Environment(environment_genome_a)
-    environment_b = Environment(environment_genome_b)
 
     fitness_a = 0
     fitness_b = 0
 
     for robot_genome in random.sample(simulation_state.robot_genomes, NUM_SAMPLES):
-        robot = Robot(robot_genome)
-        fitness_a += run_trials(environment_a, robot)
-        fitness_b += run_trials(environment_b, robot)
+        fitness_a += run_trials(environment_genome_a, robot_genome)
+        fitness_b += run_trials(environment_genome_b, robot_genome)
 
     fitness_a /= NUM_SAMPLES
     fitness_b /= NUM_SAMPLES

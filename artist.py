@@ -80,4 +80,8 @@ class Artist:
 
     def clear(self):
         self.artist.clear()
-        self.artist.hideturtle()
+
+    def destroy(self):
+        turtle.turtles().remove(self.artist)
+        print(len(turtle.turtles()))
+        self.artist = None  # Prevent turtle from being used anymore

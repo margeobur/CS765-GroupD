@@ -276,3 +276,11 @@ class RobotArtist(Artist):
         self.orientation_turtle.clear()
         for t in itertools.chain(self.sensor_turtles, *self.sensor_sig_turtles):
             t.clear()
+
+    def destroy(self):
+        super().destroy()
+        turtle.turtles().remove(self.water_battery_turtle)
+        turtle.turtles().remove(self.food_battery_turtle)
+        turtle.turtles().remove(self.orientation_turtle)
+        for t in itertools.chain(self.sensor_turtles, *self.sensor_sig_turtles):
+            turtle.turtles().remove(t)

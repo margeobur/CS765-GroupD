@@ -126,6 +126,9 @@ class Robot:
 	def clear(self):
 		self.artist.clear()
 
+	def destroy(self):
+		self.artist.destroy()
+
 
 def test():
 	robot_genome = RobotGenome()
