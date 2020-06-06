@@ -9,18 +9,18 @@ from thing_artist import ThingArtist
 
 class Thing:
     COLOUR = "black"
-    CONSUMPTION_RATE = 0.25 * 10.0
+    CONSUMPTION_RATE = 0.1
     ROBOT_FILL_RATE = 0.25
-    REGROW_RATE = 0.25
+    REGROW_RATE = 0.025
     TOTAL_AMOUNT = 4
 
     def __init__(self, gene, nx=None, ny=None):
         self.amount_when_full = self.TOTAL_AMOUNT / gene.amount.value
         self.amount_left = 0
-        self.radius = 1.0
+        self.radius = 20
         self.smell_signature = gene.smell_signature.flatten()
 
-        self.artist = ThingArtist(1)
+        self.artist = ThingArtist(self.radius)
 
         self.reset()
 
@@ -128,7 +128,8 @@ class Environment:
 
     def interact_with_robot(self, robot):
         interaction_distances = robot.radius + self.thing_radii
-        things_are_interacting = np.linalg.norm(self.thing_positions - robot.position, axis=0) < interaction_distances
+        distances = np.linalg.norm(self.thing_positions - robot.position, axis=0)
+        things_are_interacting = distances < interaction_distances
         for thing, is_interacting in zip(self.everything(), things_are_interacting):
             if is_interacting:
                 thing.interact_with_robot(robot)

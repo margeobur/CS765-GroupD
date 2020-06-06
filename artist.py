@@ -17,7 +17,7 @@ class Artist:
         except:
             self.artist = turtle.Turtle()
         
-        self.radius = r
+        self.radius = r / 22  # Magical multiplier to get them correctly scaled
         self.x_pos = 0
         self.y_pos = 0
         self.col = "black"

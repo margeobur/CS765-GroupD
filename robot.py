@@ -14,7 +14,7 @@ from robot_artist import RobotArtist
 class Robot:
 	def __init__(self, genome):
 		# Radius of the robot
-		self.radius = 1.0
+		self.radius = 20.0
 
 		# Robot's x, y position and heading angle
 		self.position = np.vstack([
@@ -72,8 +72,8 @@ class Robot:
 			self.angle += simulation_state.timestep * max_speed * (self.l_motor - self.r_motor) / (2.0 * self.radius)
 
 			self.env.interact_with_robot(self)
-			self.food_battery = np.clip(self.food_battery - 0.04 * simulation_state.timestep, 0.0, 1.0)
-			self.water_battery = np.clip(self.food_battery - 0.04 * simulation_state.timestep, 0.0, 1.0)
+			self.food_battery = np.clip(self.food_battery - 0.01 * simulation_state.timestep, 0.0, 1.0)
+			self.water_battery = np.clip(self.food_battery - 0.01 * simulation_state.timestep, 0.0, 1.0)
 
 		if self.food_battery == 0.0 or self.water_battery == 0.0:
 			self.is_alive = False
@@ -173,11 +173,11 @@ def test():
 	robot.set_environment(environment)
 	environment.reset()
 	robot.reset()
-	robot.position = np.vstack([0.0, 0.0])
+	robot.position = np.vstack([100.0, 100.0])
 	robot.angle = 0
-	environment.waters[0].position = np.array([1, 1])
-	environment.foods[0].position = np.array([1, 0])
-	environment.traps[0].position = np.array([1, -1])
+	environment.waters[0].position = np.array([140, 140])
+	environment.foods[0].position = np.array([140, 100])
+	environment.traps[0].position = np.array([160, 60])
 	environment.thing_positions = np.array([thing.position for thing in environment.everything()]).transpose()
 	robot.calculate_change()
 	print(robot.sensor_values)
@@ -186,6 +186,19 @@ def test():
 	robot.update()
 	print(robot.position)
 	print(robot.angle)
+
+	win = turtle.Screen()
+	win.setup(simulation_state.arena_width, simulation_state.arena_width)
+	win.setworldcoordinates(0, 0, simulation_state.arena_width, simulation_state.arena_width)
+	win.bgcolor("black")
+	win.title("Arena")
+	win.colormode(255)
+	win.tracer(0)
+	win.delay(16)
+	environment.draw()
+	robot.draw()
+	turtle.update()
+	win.mainloop()
 
 
 if __name__ == "__main__":

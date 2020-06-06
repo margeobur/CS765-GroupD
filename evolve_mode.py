@@ -28,11 +28,10 @@ def run_trials(environment, robot):
         robot.reset()
 
         for time in range(TRIAL_LENGTH):
-            if time % 10 == 0:
+            if time % 100 == 0:
                 environment.draw()
                 robot.draw()
                 turtle.update()
-                print(f"time: {time}")
             if robot.is_alive:
                 robot.calculate_change()
                 robot.update()
