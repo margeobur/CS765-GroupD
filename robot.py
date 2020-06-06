@@ -88,7 +88,7 @@ class Robot:
 		displacements = self.env.thing_positions.transpose()[:, np.newaxis, :] - sensor_positions.transpose()[np.newaxis, :, :]
 
 		# For each (row: thing, col: sensor), compute the euclidean distance between the sensor and the thing
-		distances = np.linalg.norm(displacements, None, 2)
+		distances = np.linalg.norm(displacements, axis=2)
 
 		# For each (row: thing, col: sensor), compute the unit vector from sensor to thing
 		directions = displacements / distances[:, :, np.newaxis]
