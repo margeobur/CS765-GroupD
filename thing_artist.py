@@ -19,6 +19,10 @@ class ThingArtist(Artist):
 
     ''' --------------Setters for build method (head)-------------- '''
 
+    def amount_full(self, max_cap):
+        self.max_cap = max_cap
+        return self
+
     def amount_left(self, volume):
         self.volume = volume
         return self
@@ -48,7 +52,24 @@ class ThingArtist(Artist):
     # Method for filling in the colour of the element
     # Parameters:
     #   ...
+    # includes fading effects to show 
     def fill_colour(self):
+        ratio = self.volume/self.max_cap
+        
+        (r, g, b) = self.col
+        if not (r == 255 and g == 0 and b == 0):
+            r = math.floor(r * ratio + 64)
+            g = math.floor(g * ratio + 64)
+            b = math.floor(b * ratio + 64)
+
+            if r > 255:
+                r = 255
+            if g > 255:
+                g = 255
+            if b > 255:
+                b = 255
+        
+        self.col = (r, g, b)
         super().fill_colour()
 
     # Method for drawing in the details of the element

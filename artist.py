@@ -11,6 +11,7 @@ class Artist:
     # Parameters: Takes in the radius for the GUI element
     def __init__(self, r):
         # TODO: Jin: I know it looks hacky, but it works on Spyder
+        turtle.colormode(255)
         try:
             self.artist = turtle.Turtle()
         except:
@@ -73,5 +74,6 @@ class Artist:
     # Method for drawing in other necessary detail for the element.
     # This is a template method approach for Artist#draw() invoked after the 
     # main body of the element is drawn.
+    # -- TO BE IMPLEMENTED BY CONCRETE CHILDREN CLASSES --
     def draw_detail(self):
         pass
