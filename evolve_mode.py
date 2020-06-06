@@ -27,7 +27,7 @@ def run_trials(environment, robot):
 
         robot.draw()
         environment.draw()
-        turtle.Screen().update()
+        turtle.update()
 
         for time in range(TRIAL_LENGTH):
             if time % 100 == 0:
@@ -41,9 +41,9 @@ def run_trials(environment, robot):
                 print("dead")
                 break
 
-    robot.clear()
-    environment.clear()
-    turtle.Screen().update()
+        robot.clear()
+        environment.clear()
+        turtle.update()
 
     return fitness / N_TRIALS
 
@@ -87,7 +87,7 @@ def iterate_evolve_robot():
     select_and_crossover(robot_genome_a, robot_genome_b, fitness_a, fitness_b)
     robot_a.clear()
     robot_b.clear()
-    turtle.Screen().update()
+    turtle.update()
 
 def iterate_evolve_environment():
     global tournament
@@ -121,5 +121,5 @@ def main():
     global tournament
     tournament = 1
     turtle.Screen().title("Evolve Mode")
-    for _ in range(30):
+    for _ in range(5):
         random.choice([iterate_evolve_robot, iterate_evolve_environment])()

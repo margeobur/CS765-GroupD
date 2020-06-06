@@ -31,6 +31,8 @@ class Robot:
         self.b = random.randrange(64, 192)
         self.alpha = 128
 
+        self.myTurtle = turtle.Turtle()
+
         self.is_alive = True
 
         self.brain = EvolvableBrain(genome)
@@ -39,6 +41,8 @@ class Robot:
         self.sensor_vectors = np.array([polar2vec(gene.angle.value) for gene in genome.sensors.list]).transpose()
         self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in genome.sensors.list]).transpose()
         self.smell_alignment = None
+
+        self.reset()
 
     def reset(self):
         self.position = np.vstack([
@@ -99,8 +103,8 @@ class Robot:
 
     def drawOneAntena(self, degrees):
         t = self.myTurtle
-        gx = self.position[0]
-        gy = self.position[1]
+        gx = int(self.position[0][0])
+        gy = int(self.position[1][0])
         hx = math.cos(self.angle + degrees/180 * math.pi) * self.radius * 28
         hy = math.sin(self.angle + degrees/180 * math.pi) * self.radius * 28
         t.penup()

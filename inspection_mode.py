@@ -2,11 +2,12 @@ import turtle
 
 import simulation_state
 import evolve_mode
+from environment import Environment
 from robot import Robot
 
 iterations_per_draw = 8
 
-def most_fit_robot_index(robots_genomes, fitnesses):
+def most_fit_genome_index(fitnesses):
     max_fitness_i = 0
 
     for i in range(0, len(fitnesses)):
@@ -16,22 +17,24 @@ def most_fit_robot_index(robots_genomes, fitnesses):
     return max_fitness_i
 
 def inspection_mode():
-    r_id = most_fit_robot_index(simulation_state.robot_genomes, evolve_mode.fitnesses)
+    r_id = most_fit_genome_index(evolve_mode.robot_fitnesses)
+    e_id = most_fit_genome_index(evolve_mode.environment_fitnesses)
+
+    env = Environment(simulation_state.environment_genomes[e_id])
 
     robot = Robot(simulation_state.robot_genomes[r_id])
-    robot.set_environment(simulation_state.env)
+    robot.set_environment(env)
     robot.draw()
 
-    simulation_state.env.reset()
-    trial_length = evolve_mode.trial_length
+    TRIAL_LENGTH = evolve_mode.TRIAL_LENGTH
 
-    for i in range(0, trial_length):
+    for i in range(0, TRIAL_LENGTH):
         if robot.is_alive:
             robot.calculate_change()
             robot.update()
-            simulation_state.env.update()
+            env.update()
             if i % iterations_per_draw == 0:
-                # simulation_state.env.draw()
+                env.draw()
                 robot.draw()
                 turtle.update()
         else:

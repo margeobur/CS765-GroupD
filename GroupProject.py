@@ -26,12 +26,12 @@ def main():
     win.title("Arena")
     win.colormode(255)
     win.tracer(False)
-    # win.delay(16)
+    win.delay(15)
     win.update()
 
     evolve_mode.main()
     inspection_mode.main()
-    turtle.done()
+    win.mainloop()
 
 
 main()

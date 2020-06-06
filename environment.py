@@ -32,18 +32,6 @@ class Thing:
             random.randrange(0, simulation_state.arena_width)
         ])
 
-    def draw(self):
-        # alpha = int(180 * self.amount)
-        # Not sure the above line is needed anymore.
-        t = self.myTurtle
-        t.clear()
-        t.fillcolor(self.COLOUR)
-        t.penup()
-        t.goto(self.position[0], self.position[1])
-        t.pendown()
-        t.shape("circle")
-        t.shapesize(self.radius * 2, self.radius * 2)
-
     def update(self):
         if not self.is_gone():
             self.amount_left += self.REGROW_RATE * simulation_state.timestep
@@ -59,6 +47,18 @@ class Thing:
 
     def is_gone(self):
         return self.amount_left <= 0
+
+    def draw(self):
+        # alpha = int(180 * self.amount)
+        # Not sure the above line is needed anymore.
+        t = self.myTurtle
+        t.clear()
+        t.fillcolor(self.COLOUR)
+        t.penup()
+        t.goto(self.position[0], self.position[1])
+        t.pendown()
+        t.shape("circle")
+        t.shapesize(self.radius * 2, self.radius * 2)
 
     def clear(self):
         self.myTurtle.clear()
@@ -113,6 +113,8 @@ class Environment:
                 self.traps.append(Trap(gene))
 
         self.thing_signatures = np.array([thing.smell_signature for thing in self.everything()]).transpose()
+
+        self.reset()
 
     def everything(self):
         return itertools.chain(self.foods, self.waters, self.traps)
