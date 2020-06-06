@@ -20,6 +20,7 @@ class RobotArtistTester(ArtistTester):
         artist2 = RobotArtist(1)
         artist3 = RobotArtist(1)
         artist4 = RobotArtist(1)
+        artist5 = RobotArtist(1)
         smell_sig1 = [-0.6692384698663982, -0.4058080337461456, -0.5856871543135049, -0.9942005212095189, -0.09659883151229631]
         smell_sig2 = [-0.1581927130390064, 0.5243553799375225, 0.49507282599854596, -0.008671600933305434, 0.04489397170966969]
         smell_sig3 = [-0.096316806460637, 0.4338130167438412, 0.3601080121137903, -0.8140349133602223, 0.9253748921591534]
@@ -34,10 +35,13 @@ class RobotArtistTester(ArtistTester):
             dir).sensor_angles(sensor_angles).food_battery(0.1).water_battery(0.1).smell_signatures(smell_sig_list)
         artist4.x_position(150).y_position(350).alive(True).orientation(
             dir).sensor_angles(sensor_angles).food_battery(0.3).water_battery(0.7).smell_signatures(smell_sig_list)
+        artist5.x_position(350).y_position(150).alive(True).orientation(
+            dir).sensor_angles(sensor_angles).food_battery(0.7).water_battery(0.2).smell_signatures(smell_sig_list)
         artist1.draw()
         artist2.draw()
         artist3.draw()
         artist4.draw()
+        artist5.draw()
 
 if __name__ == "__main__":
     RobotArtistTester()
