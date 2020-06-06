@@ -38,6 +38,7 @@ class Robot:
 		self.brain = EvolvableBrain(genome)
 		self.env = None
 		self.sensor_values = np.zeros(len(genome.sensors.list))
+		self.sensor_angles = [gene.angle.value for gene in genome.sensors.list]
 		self.sensor_vectors = np.array([polar2vec(gene.angle.value) for gene in genome.sensors.list]).transpose()
 		self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in genome.sensors.list]).transpose()
 		self.smell_alignment = None
@@ -108,11 +109,11 @@ class Robot:
 		if self.is_alive:
 			alpha = 255
 		
-		self.artist.x_position(self.position[0]).y_position(
-			self.position[1]).alive(self.is_alive).orientation(
-				self.alpha).sensor_angles(self.sensor_angles).food_battery(
+		self.artist.x_position(self.position[0][0]).y_position(
+			self.position[1][0]).alive(self.is_alive).orientation(
+				self.angle).sensor_angles(self.sensor_angles).food_battery(
 					self.food_battery).water_battery(self.water_battery).smell_signatures(
-						self.sensor_signatures)
+						self.sensor_signatures.transpose())
 		self.artist.draw()
 
 
