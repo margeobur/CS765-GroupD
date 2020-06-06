@@ -60,6 +60,9 @@ class Thing:
     def is_gone(self):
         return self.amount_left <= 0
 
+    def clear(self):
+        self.myTurtle.clear()
+        self.myTurtle.hideturtle()
 
 class Food(Thing):
     COLOUR = "yellow"
@@ -130,3 +133,7 @@ class Environment:
     def draw(self):
         for thing in self.everything():
             thing.draw()
+
+    def clear(self):
+        for thing in self.everything():
+            thing.clear()

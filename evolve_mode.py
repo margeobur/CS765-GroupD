@@ -42,6 +42,7 @@ def run_trials(environment, robot):
                 break
 
     robot.clear()
+    environment.clear()
     turtle.Screen().update()
 
     return fitness / N_TRIALS
