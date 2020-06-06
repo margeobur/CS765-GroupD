@@ -1,4 +1,6 @@
 from brain import EvolvableBrain
+from genome import RobotGenome, EnvironmentGenome
+from environment import Environment
 import random
 import simulation_state
 import numpy as np
@@ -118,3 +120,66 @@ class Robot:
 		self.artist.draw()
 
 
+def test():
+	robot_genome = RobotGenome()
+	robot_genome.from_flattened({
+		"sensors": [
+			{
+				"threshold": 0,
+				"mapping": [
+					{"x": 0.0, "y": 0.0},
+					{"x": 1.0, "y": 1.0}
+				],
+				"smell_signature": [1, 0, 0, 0, 0],
+				"motor_side": "LEFT",
+				"angle": math.pi / 4
+			},
+			{
+				"threshold": 0,
+				"mapping": [
+					{"x": 0.0, "y": 0.0},
+					{"x": 1.0, "y": 1.0}
+				],
+				"smell_signature": [1, 1, 0, 0, 0],
+				"motor_side": "RIGHT",
+				"angle": math.pi * 7 / 4
+			}
+		]
+	})
+	robot = Robot(robot_genome)
+	environment_genome = EnvironmentGenome()
+	environment_genome.from_flattened({
+		"water_genes": [{
+			"amount": 1,
+			"smell_signature": [1, 0, 0, 0, 0]
+		}],
+		"food_genes": [{
+			"amount": 1,
+			"smell_signature": [0, 0, 0, 0, 0]
+		}],
+		"trap_genes": [{
+			"amount": 1,
+			"smell_signature": [0, 1, 0, 0, 0]
+		}]
+	})
+	environment = Environment(environment_genome)
+	robot.set_environment(environment)
+	environment.reset()
+	robot.reset()
+	robot.position = np.vstack([0.0, 0.0])
+	robot.angle = 0
+	environment.waters[0].position = np.array([1, 1])
+	environment.foods[0].position = np.array([1, 0])
+	environment.traps[0].position = np.array([1, -1])
+	environment.thing_positions = np.array([thing.position for thing in environment.everything()]).transpose()
+	robot.calculate_change()
+	print(robot.sensor_values)
+	robot.update()
+	print(robot.position)
+	robot.update()
+	print(robot.position)
+	print(robot.angle)
+
+
+if __name__ == "__main__":
+	test()
