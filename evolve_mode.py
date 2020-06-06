@@ -120,5 +120,5 @@ def main():
     global tournament
     tournament = 1
     turtle.Screen().title("Evolve Mode")
-    while True:
+    for _ in range(30):
         random.choice([iterate_evolve_robot, iterate_evolve_environment])()

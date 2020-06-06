@@ -30,6 +30,7 @@ def main():
     win.update()
 
     evolve_mode.main()
+    inspection_mode.main()
     turtle.done()
 
 
