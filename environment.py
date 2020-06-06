@@ -44,10 +44,11 @@ class Thing:
     def update(self):
         if not self.is_gone():
             self.amount_left += self.REGROW_RATE * simulation_state.timestep
-            self.amount_left = np.clip(self.amount_left, 0, self.amount_when_full)
+            if self.amount_left > self.amount_when_full:
+                self.amount_left = self.amount_when_full
 
     def interact_with_robot(self, robot):
-        if not self.is_gone() and np.linalg.norm(self.position - robot.position) < self.radius:
+        if not self.is_gone():
             self.on_touched_by_robot(robot)
 
     def on_touched_by_robot(self, robot):
@@ -76,7 +77,7 @@ class Water(Thing):
 
 class Trap(Thing):
     COLOUR = (255, 0, 0) # red in rgb
-    
+
     def on_touched_by_robot(self, robot):
         robot.food_battery = 0.0
         robot.water_battery = 0.0
@@ -108,6 +109,7 @@ class Environment:
 
         self.thing_signatures = np.array([thing.smell_signature for thing in self.everything()]).transpose()
         # self.artist = EnvironmentArtist(1, foods, waters, traps)
+        self.thing_radii = np.array([thing.radius for thing in self.everything()])
 
     def everything(self):
         return itertools.chain(self.foods, self.waters, self.traps)
@@ -118,8 +120,11 @@ class Environment:
         self.thing_positions = np.array([thing.position for thing in self.everything()]).transpose()
 
     def interact_with_robot(self, robot):
-        for thing in self.everything():
-            thing.interact_with_robot(robot)
+        interaction_distances = robot.radius + self.thing_radii
+        things_are_interacting = np.linalg.norm(self.thing_positions - robot.position, axis=0) < interaction_distances
+        for thing, is_interacting in zip(self.everything(), things_are_interacting):
+            if is_interacting:
+                thing.interact_with_robot(robot)
 
     def update(self):
         for thing in self.everything():
