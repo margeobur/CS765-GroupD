@@ -164,7 +164,7 @@ class RobotArtist(Artist):
             # calculate xi for colours 
             x_list = []
             for s in self.smell_sigs[counter]:
-                x = math.floor((s + 1) * 128)
+                x = math.floor((s + 1) * 127)
                 x_list.append(x)
 
             # create the turtles for each of the sensor colours
