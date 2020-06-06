@@ -35,7 +35,9 @@ class Thing:
         ])
 
     def draw(self):
-        self.artist.x_position(self.position[0]).y_position(self.position[1]).colour(self.COLOUR)
+        self.artist.x_position(self.position[0]).y_position(
+            self.position[1]).colour(self.COLOUR).amount_left(
+                self.amount_left).smell_signature(self.smell_signature)
         self.artist.draw()
 
     def update(self):
