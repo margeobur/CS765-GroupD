@@ -20,6 +20,8 @@ class Thing:
 
         self.reset()
 
+        self.myTurtle = turtle.Turtle()
+
         if nx is not None and ny is not None:
             self.position = np.array([nx, ny])
 
@@ -33,7 +35,8 @@ class Thing:
     def draw(self):
         # alpha = int(180 * self.amount)
         # Not sure the above line is needed anymore.
-        t = turtle.Turtle()
+        t = self.myTurtle
+        t.clear()
         t.fillcolor(self.COLOUR)
         t.penup()
         t.goto(self.position[0], self.position[1])

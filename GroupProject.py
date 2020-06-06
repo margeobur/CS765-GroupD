@@ -1,3 +1,4 @@
+import inspection_mode
 import simulation_state
 import evolve_mode
 from genome import EnvironmentGenome, RobotGenome
@@ -24,8 +25,12 @@ def main():
     win.bgcolor("black")
     win.title("Arena")
     win.colormode(255)
+    win.tracer(False)
+    # win.delay(16)
+    win.update()
+
     evolve_mode.main()
-    win.mainloop()
+    turtle.done()
 
 
 main()

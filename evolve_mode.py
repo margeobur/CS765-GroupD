@@ -1,6 +1,6 @@
 import random
+import turtle
 import numpy as np
-
 from environment import Environment
 from robot import Robot
 import simulation_state
@@ -25,6 +25,10 @@ def run_trials(environment, robot):
         robot.set_environment(environment)
         robot.reset()
 
+        robot.draw()
+        environment.draw()
+        turtle.Screen().update()
+
         for time in range(TRIAL_LENGTH):
             if time % 100 == 0:
                 print(f"time: {time}")
@@ -36,6 +40,9 @@ def run_trials(environment, robot):
             if not robot.is_alive:
                 print("dead")
                 break
+
+    robot.clear()
+    turtle.Screen().update()
 
     return fitness / N_TRIALS
 
@@ -77,7 +84,9 @@ def iterate_evolve_robot():
     robot_fitnesses[b_id] = fitness_b
 
     select_and_crossover(robot_genome_a, robot_genome_b, fitness_a, fitness_b)
-
+    robot_a.clear()
+    robot_b.clear()
+    turtle.Screen().update()
 
 def iterate_evolve_environment():
     global tournament
@@ -110,5 +119,6 @@ def iterate_evolve_environment():
 def main():
     global tournament
     tournament = 1
+    turtle.Screen().title("Evolve Mode")
     while True:
         random.choice([iterate_evolve_robot, iterate_evolve_environment])()
