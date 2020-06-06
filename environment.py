@@ -88,6 +88,7 @@ class Environment:
         self.foods = []
         self.waters = []
         self.traps = []
+        self.thing_positions = None
 
         for gene in genome.food_genes.list:
             for _ in range(int(gene.amount.value)):
@@ -105,12 +106,15 @@ class Environment:
             for _ in range(int(gene.amount.value * trap_amount_multiplier)):
                 self.traps.append(Trap(gene))
 
+        self.thing_signatures = np.array([thing.smell_signature for thing in self.everything()]).transpose()
+
     def everything(self):
         return itertools.chain(self.foods, self.waters, self.traps)
 
     def reset(self):
         for thing in self.everything():
             thing.reset()
+        self.thing_positions = np.array([thing.position for thing in self.everything()]).transpose()
 
     def interact_with_robot(self, robot):
         for thing in self.everything():
