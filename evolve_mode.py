@@ -44,6 +44,7 @@ def run_trials(environment_genome, robot_genome):
         robot.clear()
         environment.clear()
 
+    turtle.resetscreen()
     robot.destroy()
     environment.destroy()
 

@@ -108,11 +108,6 @@ class Robot:
 		self.sensor_values = excitements.max(0)
 
 	def draw(self):
-		alpha = 127
-		t = turtle.Turtle()
-		if self.is_alive:
-			alpha = 255
-		
 		self.artist\
 			.x_position(self.position[0][0])\
 			.y_position(self.position[1][0])\
