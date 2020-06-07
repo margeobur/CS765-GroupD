@@ -150,3 +150,8 @@ class ThingArtist(Artist):
         super().clear()
         for t in self.sensor_sig_turtles:
             t.clear()
+
+    def destroy(self):
+        super().destroy()
+        for t in self.sensor_sig_turtles:
+            turtle.turtles().remove(t)

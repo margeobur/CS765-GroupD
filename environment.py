@@ -48,6 +48,9 @@ class Thing:
     def clear(self):
         self.artist.clear()
 
+    def destroy(self):
+        self.artist.destroy()
+
     def update(self):
         if not self.is_gone():
             self.amount_left += self.REGROW_RATE * simulation_state.timestep
@@ -145,3 +148,7 @@ class Environment:
     def clear(self):
         for thing in self.everything():
             thing.clear()
+
+    def destroy(self):
+        for thing in self.everything():
+            thing.destroy()
