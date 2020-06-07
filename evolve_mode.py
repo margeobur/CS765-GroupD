@@ -106,8 +106,8 @@ def iterate_evolve_environment():
     fitness_a /= NUM_SAMPLES
     fitness_b /= NUM_SAMPLES
 
-    robot_fitnesses[a_id] = fitness_a
-    robot_fitnesses[b_id] = fitness_b
+    environment_fitnesses[a_id] = fitness_a
+    environment_fitnesses[b_id] = fitness_b
 
     select_and_crossover(environment_genome_a, environment_genome_b, fitness_a, fitness_b)
 
