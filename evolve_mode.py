@@ -53,11 +53,14 @@ def run_trials(environment_genome, robot_genome):
 def select_and_crossover(genome_a, genome_b, fitness_a, fitness_b):
     winner_genome = genome_a
     loser_genome = genome_b
+    simulation_state.trial_data["peak_fitness"] = fitness_b
 
     if fitness_a > fitness_b:
+        simulation_state.trial_data["peak_fitness"] = fitness_a
         winner_genome, loser_genome = loser_genome, winner_genome
-        simulation_state.trial_data["winner_genome"] = winner_genome.flatten()
-        simulation_state.trial_data["loser_genome"] = loser_genome.flatten()
+
+    simulation_state.trial_data["winner_genome"] = winner_genome.flatten()
+    simulation_state.trial_data["loser_genome"] = loser_genome.flatten()
 
     loser_genome.crossover(winner_genome)
     loser_genome.mutate()
