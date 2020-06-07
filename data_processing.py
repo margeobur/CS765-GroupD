@@ -1,10 +1,12 @@
 import os
 import json
 import matplotlib.pyplot as plt
+import statistics
 
 #SET NUMBER OF TOURNAMENTS
 number_of_tournaments = 10
 peak_fitnesses = [0] * number_of_tournaments
+mean_robot_fitnesses = [0] * number_of_tournaments
 
 for filename in os.listdir("Data"):
     path = os.path.join("Data", filename)
@@ -24,13 +26,26 @@ for filename in os.listdir("Data"):
         environment_fitnesses = data["environment_fitnesses"]
 
         peak_fitnesses[tournament - 1] = peak_fitness
+        mean_robot_fitness = statistics.mean(robot_fitnesses)
+        mean_robot_fitnesses[tournament - 1] = mean_robot_fitness
 
+
+#graph peak fitness over tournaments
+plt.figure(0)
 plt.xlabel("number of tournaments")
 plt.ylabel("peak_fitness")
 plt.title("peak fitness over tournaments")
 plt.plot(range(1, number_of_tournaments + 1), peak_fitnesses)
-#plt.show()
 plt.savefig("Graphs/peak_fitness_over_tournaments.png")
+
+#graph robot fitnesses for each tournament
+plt.figure(1)
+plt.xlabel("mean robot fitness for the population")
+plt.ylabel("tournament")
+plt.title("mean robot fitness for the population over each tournament")
+plt.plot(range(1, number_of_tournaments + 1), mean_robot_fitnesses)
+plt.savefig("Graphs/mean_robot_fitness.png")
+
 
 
 
