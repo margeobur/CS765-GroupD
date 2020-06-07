@@ -116,6 +116,8 @@ def main():
     simulation_state.tournament = 1
     while True:
         random.choice([iterate_evolve_robot, iterate_evolve_environment])()
+
+        //Save trial data
         outfile = open("Data/tournament_data" + str(simulation_state.tournament) + ".json", "w")
         simulation_state.trial_data["robot_fitnesses"] = robot_fitnesses.tolist()
         simulation_state.trial_data["tournament"] = simulation_state.tournament
