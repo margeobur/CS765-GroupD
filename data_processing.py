@@ -29,7 +29,8 @@ plt.xlabel("number of tournaments")
 plt.ylabel("peak_fitness")
 plt.title("peak fitness over tournaments")
 plt.plot(range(1, number_of_tournaments + 1), peak_fitnesses)
-plt.show()
+#plt.show()
+plt.savefig("Graphs/peak_fitness_over_tournaments.png")
 
 
 
