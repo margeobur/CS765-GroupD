@@ -120,7 +120,6 @@ def save_tournament_data():
     outfile.close()
 
 def main():
-    simulation_state.tournament = 1
     while True:
         random.choice([iterate_evolve_robot, iterate_evolve_environment])()
         save_tournament_data()
