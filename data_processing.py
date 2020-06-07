@@ -7,6 +7,7 @@ import statistics
 number_of_tournaments = 10
 peak_fitnesses = [0] * number_of_tournaments
 mean_robot_fitnesses = [0] * number_of_tournaments
+mean_environment_fitnesses = [0] * number_of_tournaments
 peak_population_robot_fitnesses = [0] * number_of_tournaments
 peak_population_environment_fitnesses = [0] * number_of_tournaments
 
@@ -29,7 +30,9 @@ for filename in os.listdir("Data"):
 
         peak_fitnesses[tournament - 1] = peak_fitness
         mean_robot_fitness = statistics.mean(robot_fitnesses)
+        mean_environment_fitness = statistics.mean(environment_fitnesses)
         mean_robot_fitnesses[tournament - 1] = mean_robot_fitness
+        mean_environment_fitnesses[tournament - 1] = mean_environment_fitness
         peak_population_robot_fitnesses[tournament - 1] = max(robot_fitnesses)
         peak_population_environment_fitnesses[tournament - 1] = max(environment_fitnesses)
 
@@ -65,6 +68,14 @@ plt.ylabel("tournament")
 plt.title("peak robot fitness for the population over each tournament")
 plt.plot(range(1, number_of_tournaments + 1), peak_population_environment_fitnesses)
 plt.savefig("Graphs/peak_environment_fitness_for_population.png")
+
+#graph of mean environment fitness for each tournament
+plt.figure(4)
+plt.xlabel("peak environment fitness")
+plt.ylabel("tournament")
+plt.title("mean environment fitness for each tournament")
+plt.plot(range(1, number_of_tournaments + 1), mean_environment_fitnesses)
+plt.savefig("Graphs/mean_environment_fitness_for_each_tournament.png")
 
 
 
