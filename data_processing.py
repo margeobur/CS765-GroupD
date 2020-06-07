@@ -7,6 +7,7 @@ import statistics
 number_of_tournaments = 10
 peak_fitnesses = [0] * number_of_tournaments
 mean_robot_fitnesses = [0] * number_of_tournaments
+peak_population_robot_fitnesses = [0] * number_of_tournaments
 
 for filename in os.listdir("Data"):
     path = os.path.join("Data", filename)
@@ -28,6 +29,7 @@ for filename in os.listdir("Data"):
         peak_fitnesses[tournament - 1] = peak_fitness
         mean_robot_fitness = statistics.mean(robot_fitnesses)
         mean_robot_fitnesses[tournament - 1] = mean_robot_fitness
+        peak_population_robot_fitnesses[tournament - 1] = max(robot_fitnesses)
 
 
 #graph peak fitness over tournaments
@@ -46,6 +48,13 @@ plt.title("mean robot fitness for the population over each tournament")
 plt.plot(range(1, number_of_tournaments + 1), mean_robot_fitnesses)
 plt.savefig("Graphs/mean_robot_fitness.png")
 
+#graph of peak population fitness for each tournament
+plt.figure(2)
+plt.xlabel("peak robot fitness for the population")
+plt.ylabel("tournament")
+plt.title("peak robot fitness for the population over each tournament")
+plt.plot(range(1, number_of_tournaments + 1), peak_population_robot_fitnesses)
+plt.savefig("Graphs/peak_robot_fitness_for_population.png")
 
 
 
