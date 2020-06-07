@@ -52,9 +52,8 @@ def select_and_crossover(genome_a, genome_b, fitness_a, fitness_b):
 
     if fitness_a > fitness_b:
         winner_genome, loser_genome = loser_genome, winner_genome
-
-    print("this is fitness_a ", fitness_a)
-    print("this is fitness_b ", fitness_b)
+        simulation_state.trial_data["winner_genome"] = winner_genome.to_json()
+        simulation_state.trial_data["loser_genome"] = loser_genome.to_json()
 
     loser_genome.crossover(winner_genome)
     loser_genome.mutate()
@@ -111,19 +110,18 @@ def iterate_evolve_environment():
 
     select_and_crossover(environment_genome_a, environment_genome_b, fitness_a, fitness_b)
 
+def save_tournament_data():
+    outfile = open("Data/tournament_data" + str(simulation_state.tournament) + ".json", "w")
+    simulation_state.trial_data["robot_fitnesses"] = robot_fitnesses.tolist()
+    simulation_state.trial_data["tournament"] = simulation_state.tournament
+    outfile.write(json.dumps(simulation_state.trial_data))
+    outfile.close()
 
 def main():
     simulation_state.tournament = 1
     while True:
         random.choice([iterate_evolve_robot, iterate_evolve_environment])()
-
-        //Save trial data
-        outfile = open("Data/tournament_data" + str(simulation_state.tournament) + ".json", "w")
-        simulation_state.trial_data["robot_fitnesses"] = robot_fitnesses.tolist()
-        simulation_state.trial_data["tournament"] = simulation_state.tournament
-        print(simulation_state.trial_data)
-        outfile.write(json.dumps(simulation_state.trial_data))
-        outfile.close()
+        save_tournament_data()
 
 
 
