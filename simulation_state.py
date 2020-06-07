@@ -4,7 +4,6 @@ arena_width = 200
 timestep = 0.08
 iteration = 0
 tournament = 0
-trial_data = None
 
 pop_size = 30
 environment_genomes = []

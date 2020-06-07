@@ -14,9 +14,8 @@ environment_fitnesses = np.zeros(simulation_state.pop_size)
 robot_fitnesses = np.zeros(simulation_state.pop_size)
 history_size = 500
 
-mean_fitness_history = []
-peak_fitness_history = []
-
+trial_data = {}
+population_data = {}
 
 def run_trials(environment_genome, robot_genome):
     fitness = 0
@@ -51,16 +50,17 @@ def run_trials(environment_genome, robot_genome):
 
 
 def select_and_crossover(genome_a, genome_b, fitness_a, fitness_b):
+    global trial_data
     winner_genome = genome_a
     loser_genome = genome_b
-    simulation_state.trial_data["peak_fitness"] = fitness_b
+    trial_data["peak_fitness"] = fitness_b
 
     if fitness_a > fitness_b:
-        simulation_state.trial_data["peak_fitness"] = fitness_a
+        trial_data["peak_fitness"] = fitness_a
         winner_genome, loser_genome = loser_genome, winner_genome
 
-    simulation_state.trial_data["winner_genome"] = winner_genome.flatten()
-    simulation_state.trial_data["loser_genome"] = loser_genome.flatten()
+    trial_data["winner_genome"] = winner_genome.flatten()
+    trial_data["loser_genome"] = loser_genome.flatten()
 
     loser_genome.crossover(winner_genome)
     loser_genome.mutate()
@@ -112,17 +112,35 @@ def iterate_evolve_environment():
     select_and_crossover(environment_genome_a, environment_genome_b, fitness_a, fitness_b)
 
 def save_tournament_data():
+    global trial_data
     outfile = open("Data/tournament_data" + str(simulation_state.tournament) + ".json", "w")
-    simulation_state.trial_data["tournament"] = simulation_state.tournament
-    simulation_state.trial_data["robot_fitnesses"] = robot_fitnesses.tolist()
-    simulation_state.trial_data["environment_fitnesses"] = environment_fitnesses.tolist()
-    outfile.write(json.dumps(simulation_state.trial_data))
+    trial_data["tournament"] = simulation_state.tournament
+    trial_data["robot_fitnesses"] = robot_fitnesses.tolist()
+    trial_data["environment_fitnesses"] = environment_fitnesses.tolist()
+    outfile.write(json.dumps(trial_data))
+    outfile.close()
+
+def save_population_data():
+    global population_data
+    outfile = open("Data/population_data_at_tournament" + str(simulation_state.tournament) + ".json", "w")
+
+    population_data["environment_genomes"] = {}
+    for env_genome in simulation_state.environment_genomes:
+        pos = simulation_state.environment_genomes.index(env_genome)
+        population_data["environment_genomes"][str(pos)] = env_genome.flatten()
+
+    population_data["robot_genomes"] = {}
+    for robot_genome in simulation_state.robot_genomes:
+        pos = simulation_state.robot_genomes.index(robot_genome)
+        population_data["robot_genomes"][str(pos)] = robot_genome.flatten()
+    outfile.write(json.dumps(population_data))
     outfile.close()
 
 def main():
     while True:
         random.choice([iterate_evolve_robot, iterate_evolve_environment])()
         save_tournament_data()
+        save_population_data()
 
 
 

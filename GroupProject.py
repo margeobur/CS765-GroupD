@@ -19,7 +19,6 @@ def setup():
 
 def main():
     setup()
-    simulation_state.trial_data = {}
     win = turtle.Screen()
     win.setup(simulation_state.arena_width, simulation_state.arena_width)
     win.setworldcoordinates(0, 0, simulation_state.arena_width, simulation_state.arena_width)
