@@ -2,6 +2,7 @@ import simulation_state
 import evolve_mode
 from genome import EnvironmentGenome, RobotGenome
 import turtle
+import json
 
 
 def setup():
@@ -18,7 +19,7 @@ def setup():
 
 def main():
     setup()
-
+    simulation_state.trial_data = {}
     win = turtle.Screen()
     win.setup(simulation_state.arena_width, simulation_state.arena_width)
     win.setworldcoordinates(0, 0, simulation_state.arena_width, simulation_state.arena_width)
@@ -30,7 +31,6 @@ def main():
     win.update()
     evolve_mode.main()
     win.mainloop()
-    
 
 
 main()

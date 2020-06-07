@@ -5,8 +5,7 @@ import turtle
 from environment import Environment
 from robot import Robot
 import simulation_state
-
-tournament = 0
+import json
 
 TRIAL_LENGTH = 1500
 N_TRIALS = 1
@@ -54,14 +53,15 @@ def select_and_crossover(genome_a, genome_b, fitness_a, fitness_b):
     if fitness_a > fitness_b:
         winner_genome, loser_genome = loser_genome, winner_genome
 
+    print("this is fitness_a ", fitness_a)
+    print("this is fitness_b ", fitness_b)
+
     loser_genome.crossover(winner_genome)
     loser_genome.mutate()
 
 
 def iterate_evolve_robot():
-    global tournament
-
-    tournament += 1
+    simulation_state.tournament += 1
     a_id, b_id = random.sample(range(len(simulation_state.robot_genomes)), 2)
 
     robot_genome_a = simulation_state.robot_genomes[a_id]
@@ -87,9 +87,7 @@ def iterate_evolve_robot():
 
 
 def iterate_evolve_environment():
-    global tournament
-
-    tournament += 1
+    simulation_state.tournament += 1
     a_id, b_id = random.sample(range(len(simulation_state.environment_genomes)), 2)
 
     environment_genome_a = simulation_state.environment_genomes[a_id]
@@ -115,7 +113,15 @@ def iterate_evolve_environment():
 
 
 def main():
-    global tournament
-    tournament = 1
+    simulation_state.tournament = 1
     while True:
         random.choice([iterate_evolve_robot, iterate_evolve_environment])()
+        outfile = open("Data/tournament_data" + str(simulation_state.tournament) + ".json", "w")
+        simulation_state.trial_data["robot_fitnesses"] = robot_fitnesses.tolist()
+        simulation_state.trial_data["tournament"] = simulation_state.tournament
+        print(simulation_state.trial_data)
+        outfile.write(json.dumps(simulation_state.trial_data))
+        outfile.close()
+
+
+
