@@ -21,6 +21,8 @@ winner_num_of_trap_genes = [0] * number_of_tournaments
 loser_num_of_trap_genes = [0] * number_of_tournaments
 winner_num_of_food_genes = [0] * number_of_tournaments
 loser_num_of_food_genes = [0] * number_of_tournaments
+winner_num_of_sensors = [0] * number_of_tournaments
+loser_num_of_sensors = [0] * number_of_tournaments
 
 for filename in os.listdir("Data"):
     path = os.path.join("Data", filename)
@@ -53,6 +55,8 @@ for filename in os.listdir("Data"):
         loser_num_of_trap_genes[tournament - 1] = len(loser_genome["trap_genes"]) if "trap_genes" in loser_genome else 0
         winner_num_of_food_genes[tournament - 1] = len(winner_genome["food_genes"]) if "food_genes" in winner_genome else 0
         loser_num_of_food_genes[tournament - 1] = len(loser_genome["food_genes"]) if "food_genes" in loser_genome else 0
+        winner_num_of_sensors[tournament - 1] = len(winner_genome["sensors"]) if "sensors" in winner_genome else 0
+        loser_num_of_sensors[tournament - 1] = len(loser_genome["sensors"]) if "sensors" in loser_genome else 0
 
 #graph peak fitness over tournaments
 plt.figure(0)
@@ -94,7 +98,7 @@ plt.title("mean environment fitness for each tournament")
 plt.plot(range(1, number_of_tournaments + 1), mean_environment_fitnesses)
 plt.savefig("Graphs/mean_environment_fitness_for_each_tournament.png")
 
-#graph of number of water genes in the population for each tournament
+#graph of number of water genes for each tournament
 plt.figure(5)
 plt.xlabel("tournament")
 plt.ylabel("number of water genes")
@@ -104,7 +108,7 @@ plt.plot(range(1, number_of_tournaments + 1), loser_num_of_water_genes, color='r
 plt.legend()
 plt.savefig("Graphs/winner_vs_loser_water_genes.png")
 
-#graph of number of traps genes in the population for each tournament
+#graph of number of traps genes for for each tournament
 plt.figure(6)
 plt.xlabel("tournament")
 plt.ylabel("number of trap genes")
@@ -114,7 +118,7 @@ plt.plot(range(1, number_of_tournaments + 1), loser_num_of_trap_genes, color='r'
 plt.legend()
 plt.savefig("Graphs/winner_vs_loser_trap_genes.png")
 
-#graph of number of food genes in the population for each tournament
+#graph of number of food genes for each tournament
 plt.figure(7)
 plt.xlabel("tournament")
 plt.ylabel("number of food genes")
@@ -124,5 +128,12 @@ plt.plot(range(1, number_of_tournaments + 1), loser_num_of_food_genes, color='r'
 plt.legend()
 plt.savefig("Graphs/winner_vs_loser_food_genes.png")
 
-
-
+#graph of number of sensors for each tournament
+plt.figure(8)
+plt.xlabel("tournament")
+plt.ylabel("number of sensors")
+plt.title("winner vs. loser for the number of sensors for each tournament")
+plt.plot(range(1, number_of_tournaments + 1), winner_num_of_sensors, color='m', label='winner')
+plt.plot(range(1, number_of_tournaments + 1), loser_num_of_sensors, color='r', label='loser')
+plt.legend()
+plt.savefig("Graphs/winner_vs_loser_num_sensors.png")
