@@ -5,6 +5,10 @@ import turtle
 import json
 
 
+LOAD_INITIAL_POPULATION_FROM = None
+LOAD_ONLY_THE_BEST_ROBOT = False
+
+
 def setup():
     environment_genome = EnvironmentGenome()
     environment_genome.from_flattened({
@@ -27,6 +31,24 @@ def setup():
         robot_genome.randomise()
         simulation_state.robot_genomes.append(robot_genome)
         simulation_state.environment_genomes.append(environment_genome)
+
+    if LOAD_INITIAL_POPULATION_FROM is not None:
+        best_robot_index = None
+        with open(f"Data/tournament_data{LOAD_INITIAL_POPULATION_FROM}.json") as file:
+            a = json.load(file)
+            max_fitness = max(a["robot_fitnesses"])
+            best_robot_index = a["robot_fitnesses"].index(max_fitness)
+
+        with open(f"Data/population_data_at_tournament{LOAD_INITIAL_POPULATION_FROM}.json") as file:
+            a = json.load(file)
+            for key, genome in a["environment_genomes"].items():
+                simulation_state.environment_genomes[int(key)].from_flattened(genome)
+            if LOAD_ONLY_THE_BEST_ROBOT:
+                for i in range(simulation_state.pop_size):
+                    simulation_state.robot_genomes[i].from_flattened(a["robot_genomes"][str(best_robot_index)])
+            else:
+                for key, genome in a["robot_genomes"].items():
+                    simulation_state.robot_genomes[int(key)].from_flattened(genome)
 
 
 def main():
