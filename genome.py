@@ -195,6 +195,10 @@ class DynamicListGene(ListGene):
         for theirs in theirs_to_consider:
             self.list.append(copy.deepcopy(source.list[theirs]))
 
+        # Remove any extraneous elements
+        for gene_to_remove in [self.list[i] for i in ours_to_consider]:
+            self.list.remove(gene_to_remove)
+
     def incompatibility_with(self, other_dynamic_list):
         incompatibility = 0
         for (ours, theirs) in zip(self.list, other_dynamic_list.list):
