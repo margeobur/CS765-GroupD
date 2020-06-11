@@ -2,6 +2,9 @@ import os
 import json
 import matplotlib.pyplot as plt
 import statistics
+import re
+import itertools
+
 
 #SET NUMBER OF TOURNAMENTS
 number_of_tournaments = 10
@@ -14,6 +17,8 @@ mean_robot_fitnesses = [0] * number_of_tournaments
 mean_environment_fitnesses = [0] * number_of_tournaments
 peak_population_robot_fitnesses = [0] * number_of_tournaments
 peak_population_environment_fitnesses = [0] * number_of_tournaments
+total_thing_amount = [0] * number_of_tournaments
+total_sensor_amount = [0] * number_of_tournaments
 
 winner_num_of_water_genes = [0] * number_of_tournaments
 loser_num_of_water_genes = [0] * number_of_tournaments
@@ -27,11 +32,25 @@ loser_num_of_sensors = [0] * number_of_tournaments
 for filename in os.listdir("Data"):
     path = os.path.join("Data", filename)
     with open(path, "r") as json_file:
-        data = json.load(json_file)
+        try:
+            data = json.load(json_file)
+        except:
+            break
 
     if "population_data" in filename:
         environment_genomes = data["environment_genomes"]
         robot_genomes = data["robot_genomes"]
+        tournament = int(re.findall("(\\d+)\\.", filename)[0])
+        if tournament < number_of_tournaments:
+            total_thing_amount[tournament] = 0
+            for _, environment in data["environment_genomes"].items():
+                for thing in itertools.chain(environment["water_genes"], environment["food_genes"], environment["trap_genes"]):
+                    total_thing_amount[tournament] += thing["amount"]
+            total_thing_amount[tournament] /= len(data["environment_genomes"])
+            total_sensor_amount[tournament] = 0
+            for _, robot in data["robot_genomes"].items():
+                total_sensor_amount[tournament] += len(robot["sensors"])
+            total_sensor_amount[tournament] /= len(data["robot_genomes"])
 
     elif "tournament_data" in filename:
         tournament = data["tournament"]
@@ -60,8 +79,8 @@ for filename in os.listdir("Data"):
 
 #graph peak fitness over tournaments
 plt.figure(0)
-plt.xlabel("number of tournaments")
-plt.ylabel("peak_fitness")
+plt.ylabel("number of tournaments")
+plt.xlabel("peak_fitness")
 plt.title("peak fitness over tournaments")
 plt.plot(range(1, number_of_tournaments + 1), peak_fitnesses)
 plt.savefig("Graphs/peak_fitness_over_tournaments.png")
@@ -137,3 +156,19 @@ plt.plot(range(1, number_of_tournaments + 1), winner_num_of_sensors, color='m', 
 plt.plot(range(1, number_of_tournaments + 1), loser_num_of_sensors, color='r', label='loser')
 plt.legend()
 plt.savefig("Graphs/winner_vs_loser_num_sensors.png")
+
+#graph of number of thinjgs across population for each tournament
+plt.figure(9)
+plt.ylabel("amount of things")
+plt.xlabel("tournament")
+plt.title("mean number of things for each tournament")
+plt.plot(range(1, number_of_tournaments + 1), total_thing_amount)
+plt.savefig("Graphs/mean_number_of_things_for_each_tournament.png")
+
+#graph of number of sensors across population for each tournament
+plt.figure(10)
+plt.ylabel("amount of sensors")
+plt.xlabel("tournament")
+plt.title("mean number of sensors for each tournament")
+plt.plot(range(1, number_of_tournaments + 1), total_sensor_amount)
+plt.savefig("Graphs/mean_number_of_sensors_for_each_tournament.png")

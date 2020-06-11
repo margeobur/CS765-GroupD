@@ -23,12 +23,13 @@ def run_trials(environment_genome, robot_genome):
     robot = Robot(robot_genome)
     robot.set_environment(environment)
     for _ in range(N_TRIALS):
-        turtle.resetscreen()
+        if simulation_state.ENABLE_DRAWING:
+            turtle.resetscreen()
         environment.reset()
         robot.reset()
 
         for time in range(TRIAL_LENGTH):
-            if time % 100 == 0:
+            if simulation_state.ENABLE_DRAWING and time % 50 == 0:
                 environment.draw()
                 robot.draw()
                 turtle.update()
@@ -39,12 +40,14 @@ def run_trials(environment_genome, robot_genome):
             environment.update()
             if not robot.is_alive:
                 break
-        robot.clear()
-        environment.clear()
+        if simulation_state.ENABLE_DRAWING:
+            robot.clear()
+            environment.clear()
 
-    turtle.resetscreen()
-    robot.destroy()
-    environment.destroy()
+    if simulation_state.ENABLE_DRAWING:
+        turtle.resetscreen()
+        robot.destroy()
+        environment.destroy()
 
     return fitness / N_TRIALS
 
@@ -142,5 +145,19 @@ def main():
         save_tournament_data()
         save_population_data()
 
-
-
+        if simulation_state.tournament % 1 == 0:
+            print("\n")
+            print("=" * 100)
+            print(f"Tournament {simulation_state.tournament} - summary so far")
+            print(" - Robot Population:")
+            print([genome.flatten() for genome in simulation_state.robot_genomes])
+            print(" - Environment Population:")
+            print([genome.flatten() for genome in simulation_state.environment_genomes])
+            print(f" - Robot fitnesses: {robot_fitnesses.tolist()}")
+            print(f" - Environment fitnesses: {environment_fitnesses.tolist()}")
+            print(f" - Best robot fitness: {robot_fitnesses.max()}")
+            print(f" - Mean robot fitness: {robot_fitnesses.mean()}")
+            print(f" - Best environment fitness: {environment_fitnesses.max()}")
+            print(f" - Mean environment fitness: {environment_fitnesses.mean()}")
+            print("=" * 100)
+            print("\n")

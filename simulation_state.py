@@ -8,3 +8,5 @@ tournament = 0
 pop_size = 30
 environment_genomes = []
 robot_genomes = []
+
+ENABLE_DRAWING = True
