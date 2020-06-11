@@ -13,11 +13,11 @@ def setup():
     environment_genome = EnvironmentGenome()
     environment_genome.from_flattened({
         "water_genes": [{
-            "amount": 1,
+            "amount": 3,
             "smell_signature": [1, 0, 0, 0, 0]
         }],
         "food_genes": [{
-            "amount": 1,
+            "amount": 3,
             "smell_signature": [0, 1, 0, 0, 0]
         }],
         "trap_genes": [{
