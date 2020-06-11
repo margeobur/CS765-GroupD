@@ -46,8 +46,9 @@ class Robot:
 		self.smell_alignment = None
 
 		# An artist for handling the GUI
-		self.artist = RobotArtist(self.radius)\
-			.sensor_angles(self.sensor_angles)
+		if simulation_state.ENABLE_DRAWING:
+			self.artist = RobotArtist(self.radius)\
+				.sensor_angles(self.sensor_angles)
 
 	def reset(self):
 		self.position = np.vstack([

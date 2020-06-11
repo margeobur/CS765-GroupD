@@ -23,12 +23,13 @@ def run_trials(environment_genome, robot_genome):
     robot = Robot(robot_genome)
     robot.set_environment(environment)
     for _ in range(N_TRIALS):
-        turtle.resetscreen()
+        if simulation_state.ENABLE_DRAWING:
+            turtle.resetscreen()
         environment.reset()
         robot.reset()
 
         for time in range(TRIAL_LENGTH):
-            if time % 100 == 0:
+            if simulation_state.ENABLE_DRAWING and time % 50 == 0:
                 environment.draw()
                 robot.draw()
                 turtle.update()
@@ -39,12 +40,14 @@ def run_trials(environment_genome, robot_genome):
             environment.update()
             if not robot.is_alive:
                 break
-        robot.clear()
-        environment.clear()
+        if simulation_state.ENABLE_DRAWING:
+            robot.clear()
+            environment.clear()
 
-    turtle.resetscreen()
-    robot.destroy()
-    environment.destroy()
+    if simulation_state.ENABLE_DRAWING:
+        turtle.resetscreen()
+        robot.destroy()
+        environment.destroy()
 
     return fitness / N_TRIALS
 

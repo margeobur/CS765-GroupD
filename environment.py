@@ -20,7 +20,8 @@ class Thing:
         self.radius = 20
         self.smell_signature = gene.smell_signature.flatten()
 
-        self.artist = ThingArtist(self.radius)
+        if simulation_state.ENABLE_DRAWING:
+            self.artist = ThingArtist(self.radius)
 
         self.reset()
 
