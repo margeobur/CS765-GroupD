@@ -6,14 +6,26 @@ import json
 
 
 def setup():
+    environment_genome = EnvironmentGenome()
+    environment_genome.from_flattened({
+        "water_genes": [{
+            "amount": 1,
+            "smell_signature": [1, 0, 0, 0, 0]
+        }],
+        "food_genes": [{
+            "amount": 1,
+            "smell_signature": [0, 1, 0, 0, 0]
+        }],
+        "trap_genes": [{
+            "amount": 1,
+            "smell_signature": [0, 0, 1, 0, 0]
+        }]
+    })
     # Setup the population of robot and environment genomes
     for _ in range(simulation_state.pop_size):
         robot_genome = RobotGenome()
         robot_genome.randomise()
         simulation_state.robot_genomes.append(robot_genome)
-
-        environment_genome = EnvironmentGenome()
-        environment_genome.randomise()
         simulation_state.environment_genomes.append(environment_genome)
 
 
