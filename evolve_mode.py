@@ -8,8 +8,8 @@ import simulation_state
 import json
 
 TRIAL_LENGTH = 1500
-N_TRIALS = 1
-NUM_SAMPLES = 4
+N_TRIALS = 4
+NUM_SAMPLES = 15
 environment_fitnesses = np.zeros(simulation_state.pop_size)
 robot_fitnesses = np.zeros(simulation_state.pop_size)
 history_size = 500
