@@ -141,7 +141,10 @@ def save_population_data():
 
 def main():
     while True:
-        random.choice([iterate_evolve_robot, iterate_evolve_environment])()
+        random.choice([
+            iterate_evolve_robot,
+            # iterate_evolve_environment,
+        ])()
         save_tournament_data()
         save_population_data()
 
