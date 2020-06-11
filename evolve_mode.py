@@ -145,5 +145,19 @@ def main():
         save_tournament_data()
         save_population_data()
 
-
-
+        if simulation_state.tournament % 1 == 0:
+            print("\n")
+            print("=" * 100)
+            print(f"Tournament {simulation_state.tournament} - summary so far")
+            print(" - Robot Population:")
+            print([genome.flatten() for genome in simulation_state.robot_genomes])
+            print(" - Environment Population:")
+            print([genome.flatten() for genome in simulation_state.environment_genomes])
+            print(f" - Robot fitnesses: {robot_fitnesses.tolist()}")
+            print(f" - Environment fitnesses: {environment_fitnesses.tolist()}")
+            print(f" - Best robot fitness: {robot_fitnesses.max()}")
+            print(f" - Mean robot fitness: {robot_fitnesses.mean()}")
+            print(f" - Best environment fitness: {environment_fitnesses.max()}")
+            print(f" - Mean environment fitness: {environment_fitnesses.mean()}")
+            print("=" * 100)
+            print("\n")
