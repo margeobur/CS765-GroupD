@@ -64,11 +64,11 @@ class Genetic:
 
 
 class FloatGene(Genetic):
-    def __init__(self, mutation_args=None, randomise_probability=0.01,
+    def __init__(self, mutation_args=None, randomise_probability=0.001,
                  crossover_probability=0.5, bounds=(0, 1), wrap=False):
         super().__init__()
         if mutation_args is None:
-            mutation_args = {"mu": 0.0, "sigma": 0.1}
+            mutation_args = {"mu": 0.0, "sigma": 0.01}
         self.value = 0.0
         self.mutation_args = mutation_args
         self.randomise_probability = randomise_probability
@@ -149,7 +149,7 @@ class SmellSignatureGene(ListGene):
 
 
 class DynamicListGene(ListGene):
-    def __init__(self, ElementClass, addition_probability=0.1, removal_probability=0.1, init_size_range=(1, 3)):
+    def __init__(self, ElementClass, addition_probability=0.001, removal_probability=0.001, init_size_range=(1, 3)):
         self.ElementClass = ElementClass
         self.addition_probability = addition_probability
         self.removal_probability = removal_probability
@@ -217,7 +217,7 @@ class PiecemealPoint(Genetic):
 
 
 class PiecemealMappingGene(DynamicListGene):
-    def __init__(self, crossover_probability=0.5, addition_probability=0.1, removal_probability=0.1):
+    def __init__(self, crossover_probability=0.01, addition_probability=0.001, removal_probability=0.001):
         self.crossover_probability = crossover_probability
         super().__init__(
             ElementClass=PiecemealPoint,
@@ -269,7 +269,7 @@ Laterality = Laterality  # type: typing.Union[typing.Type[Laterality], typing.It
 
 
 class LateralityGene(Genetic):
-    def __init__(self, randomise_probability=0.1, crossover_probability=0.1):
+    def __init__(self, randomise_probability=0.001, crossover_probability=0.001):
         self.laterality = Laterality.LEFT
         self.randomise_probability = randomise_probability
         self.crossover_probability = crossover_probability
