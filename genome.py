@@ -216,8 +216,8 @@ class DynamicListGene(ListGene):
 class PiecemealPoint(Genetic):
     def __init__(self):
         super().__init__()
-        self.x = FloatGene()
-        self.y = FloatGene()
+        self.x = FloatGene(bounds=(0, 1))
+        self.y = FloatGene(bounds=(-1, 1))
 
 
 class PiecemealMappingGene(DynamicListGene):
