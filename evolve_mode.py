@@ -114,6 +114,11 @@ def iterate_evolve_environment():
 
     select_and_crossover(environment_genome_a, environment_genome_b, fitness_a, fitness_b)
 
+def init_average_fitness():
+    for i, robot_genome in enumerate(simulation_state.robot_genomes):
+        environment_genome = random.choice(simulation_state.environment_genomes)
+        robot_fitnesses[i] = run_trials(environment_genome, robot_genome)
+
 def save_tournament_data():
     global trial_data
     outfile = open("Data/tournament_data" + str(simulation_state.tournament) + ".json", "w")
@@ -140,6 +145,7 @@ def save_population_data():
     outfile.close()
 
 def main():
+    init_average_fitness()
     while True:
         random.choice([
             iterate_evolve_robot,
