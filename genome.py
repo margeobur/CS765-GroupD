@@ -64,11 +64,11 @@ class Genetic:
 
 
 class FloatGene(Genetic):
-    def __init__(self, mutation_args=None, randomise_probability=0.01,
+    def __init__(self, mutation_args=None, randomise_probability=0.02,
                  crossover_probability=0.5, bounds=(0, 1), wrap=False):
         super().__init__()
         if mutation_args is None:
-            mutation_args = {"mu": 0.0, "sigma": 0.1}
+            mutation_args = {"mu": 0.0, "sigma": 0.01}
         self.value = 0.0
         self.mutation_args = mutation_args
         self.randomise_probability = randomise_probability
@@ -221,13 +221,13 @@ class PiecemealPoint(Genetic):
 
 
 class PiecemealMappingGene(DynamicListGene):
-    def __init__(self, crossover_probability=0.1, addition_probability=0.001, removal_probability=0.001):
+    def __init__(self, crossover_probability=0.5, addition_probability=0.0, removal_probability=0.0):
         self.crossover_probability = crossover_probability
         super().__init__(
             ElementClass=PiecemealPoint,
             addition_probability=addition_probability,
             removal_probability=removal_probability,
-            init_size_range=(2, 4)
+            init_size_range=(4, 5)
         )
         self.randomise()
 
