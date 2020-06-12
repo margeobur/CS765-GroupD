@@ -97,8 +97,11 @@ class Robot:
 		# For each (row: thing, col: sensor), compute the unit vector from sensor to thing
 		directions = displacements / distances[:, :, np.newaxis]
 
-		# For each (row: thing, col: sensor), compute dot(sensor vector, sensor to thing direction) ^ 2
-		direction_alignments = ((directions * absolute_sensor_vectors.transpose()[np.newaxis, :, :]).sum(2)) ** 2
+		# For each (row: thing, col: sensor), compute dot(sensor vector, sensor to thing direction)
+		direction_alignments = ((directions * absolute_sensor_vectors.transpose()[np.newaxis, :, :]).sum(2))
+
+		# Sensors should not sense what's behind them (important! or else you'll get suboptimal bad behaviour)
+		direction_alignments = direction_alignments.clip(min=0.0)
 
 		# For each (row: thing, col: sensor), compute intensity of sensed value with linear falloff
 		impacts = (simulation_state.arena_width - distances) / simulation_state.arena_width
