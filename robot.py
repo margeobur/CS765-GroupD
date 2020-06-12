@@ -7,6 +7,7 @@ import numpy as np
 from maths import polar2vec, rotation2d
 import math
 import turtle
+import itertools
 
 from robot_artist import RobotArtist
 
@@ -39,10 +40,10 @@ class Robot:
 
 		self.brain = EvolvableBrain(genome)
 		self.env = None
-		self.sensor_values = np.zeros(len(genome.sensors.list))
-		self.sensor_angles = [gene.angle.value for gene in genome.sensors.list]
-		self.sensor_vectors = np.array([polar2vec(gene.angle.value) for gene in genome.sensors.list]).transpose()
-		self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in genome.sensors.list]).transpose()
+		self.sensor_values = np.zeros(12)  # np.zeros(len(genome.sensors.list))
+		self.sensor_angles = [math.pi / 4 if i < 3 or i >= 9 else math.pi * 7 / 4 for i in range(12)]  # [gene.angle.value for gene in genome.sensors.list]
+		self.sensor_vectors = np.array([polar2vec(angle) for angle in self.sensor_angles]).transpose()
+		self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in itertools.chain(genome.sensors.list, genome.sensors.list)]).transpose()
 		self.smell_alignment = None
 
 		# An artist for handling the GUI

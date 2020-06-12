@@ -52,20 +52,18 @@ def setup():
         # {"x": 0.7, "y": 0.0},
         {"x": 1.0, "y": -0.5},
     ])
-    for i in [4, 6, 7]:
-        test_robot_genome.sensors.list[i].mapping.from_flattened(
-            test_robot_genome.sensors.list[3].mapping.flatten()
-        )
-    for i in [1, 9, 10]:
-        test_robot_genome.sensors.list[i].mapping.from_flattened(
-            test_robot_genome.sensors.list[0].mapping.flatten()
-        )
-    test_robot_genome.sensors.list[8].mapping.from_flattened(
-        test_robot_genome.sensors.list[5].mapping.flatten()
+    test_robot_genome.sensors.list[4].mapping.from_flattened(
+        test_robot_genome.sensors.list[3].mapping.flatten()
     )
-    test_robot_genome.sensors.list[11].mapping.from_flattened(
-        test_robot_genome.sensors.list[2].mapping.flatten()
+    test_robot_genome.sensors.list[1].mapping.from_flattened(
+        test_robot_genome.sensors.list[0].mapping.flatten()
     )
+    # test_robot_genome.sensors.list[8].mapping.from_flattened(
+    #     test_robot_genome.sensors.list[5].mapping.flatten()
+    # )
+    # test_robot_genome.sensors.list[11].mapping.from_flattened(
+    #     test_robot_genome.sensors.list[2].mapping.flatten()
+    # )
     """
     test_robot_genome.sensors.list[0].mapping.from_flattened([  # contra food/water
         {"x": 0.000, "y": 0.694},
