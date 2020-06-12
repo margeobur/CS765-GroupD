@@ -74,7 +74,7 @@ class Robot:
 
 			self.env.interact_with_robot(self)
 			self.food_battery = np.clip(self.food_battery - 0.01 * simulation_state.timestep, 0.0, 1.0)
-			self.water_battery = np.clip(self.food_battery - 0.01 * simulation_state.timestep, 0.0, 1.0)
+			self.water_battery = np.clip(self.water_battery - 0.01 * simulation_state.timestep, 0.0, 1.0)
 
 		if self.food_battery == 0.0 or self.water_battery == 0.0:
 			self.is_alive = False
