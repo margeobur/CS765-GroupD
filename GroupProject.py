@@ -3,6 +3,7 @@ import evolve_mode
 from genome import EnvironmentGenome, RobotGenome
 import turtle
 import json
+import math
 
 
 LOAD_INITIAL_POPULATION_FROM = None
@@ -24,6 +25,71 @@ def setup():
             "amount": 1,
             "smell_signature": [0, 0, 1, 0, 0]
         }]
+    })
+    test_robot_genome = RobotGenome()
+    test_robot_genome.from_flattened({
+        "sensors": [
+            {
+                "threshold": 0.0,
+                "angle": math.pi / 4,
+                "smell_signature": [1, 0, 0, 0, 0],
+                "mapping": [
+                    {"x": 0.0, "y": 0.1},
+                    {"x": 1.0, "y": 1.0},
+                ],
+                "motor_side": "LEFT"
+            },
+            {
+                "threshold": 0.0,
+                "angle": math.pi * 7 / 4,
+                "smell_signature": [1, 0, 0, 0, 0],
+                "mapping": [
+                    {"x": 0.0, "y": -0.1},
+                    {"x": 1.0, "y": 1.0},
+                ],
+                "motor_side": "RIGHT"
+            },
+            {
+                "threshold": 0.0,
+                "angle": math.pi / 4,
+                "smell_signature": [0, 1, 0, 0, 0],
+                "mapping": [
+                    {"x": 0.0, "y": 0.1},
+                    {"x": 1.0, "y": 1.0},
+                ],
+                "motor_side": "LEFT"
+            },
+            {
+                "threshold": 0.0,
+                "angle": math.pi * 7 / 4,
+                "smell_signature": [0, 1, 0, 0, 0],
+                "mapping": [
+                    {"x": 0.0, "y": -0.1},
+                    {"x": 1.0, "y": 1.0},
+                ],
+                "motor_side": "RIGHT"
+            },
+            {
+                "threshold": 0.0,
+                "angle": math.pi / 4,
+                "smell_signature": [0, 0, 1, 0, 0],
+                "mapping": [
+                    {"x": 0.0, "y": 0.1},
+                    {"x": 1.0, "y": -1.0},
+                ],
+                "motor_side": "LEFT"
+            },
+            {
+                "threshold": 0.0,
+                "angle": math.pi * 7 / 4,
+                "smell_signature": [0, 0, 1, 0, 0],
+                "mapping": [
+                    {"x": 0.0, "y": -0.1},
+                    {"x": 1.0, "y": -1.0},
+                ],
+                "motor_side": "RIGHT"
+            },
+        ]
     })
     # Setup the population of robot and environment genomes
     for _ in range(simulation_state.pop_size):
