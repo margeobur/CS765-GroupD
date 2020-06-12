@@ -334,7 +334,7 @@ class SensorGene(Genetic):
 class RobotGenome(Genetic):
     def __init__(self):
         super().__init__()
-        self.sensors = DynamicListGene(SensorGene, init_size_range=(6, 7))
+        self.sensors = DynamicListGene(SensorGene, init_size_range=(12, 13))
 
     def randomise(self):
         super().randomise()
@@ -350,13 +350,13 @@ class RobotGenome(Genetic):
 
     def normalise(self):
         for i, sensor in enumerate(self.sensors.list):
-            sensor.angle.value = math.pi / 4 if i < 3 else math.pi * 7 / 4
+            sensor.angle.value = math.pi / 4 if i < 6 else math.pi * 7 / 4
             sensor.smell_signature.list[0].value = 1 if i % 3 == 0 else 0
             sensor.smell_signature.list[1].value = 1 if i % 3 == 1 else 0
             sensor.smell_signature.list[2].value = 1 if i % 3 == 2 else 0
             sensor.smell_signature.list[3].value = 0
             sensor.smell_signature.list[4].value = 0
-            sensor.motor_side.laterality = Laterality.LEFT if i < 3 else Laterality.RIGHT
+            sensor.motor_side.laterality = Laterality.LEFT if (i // 3) % 2 == 0 else Laterality.RIGHT
 
 
 def full_examples():
