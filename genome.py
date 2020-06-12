@@ -314,7 +314,7 @@ class SensorGene(Genetic):
         super().__init__()
 
         # Either
-        self.threshold = FloatGene()
+        # self.threshold = FloatGene()
         # or
         self.mapping = PiecemealMappingGene()
 
