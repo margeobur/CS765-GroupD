@@ -111,6 +111,22 @@ class Robot:
 
 		self.sensor_values = excitements.max(0)
 
+		"""
+		print("\n"*4)
+		print(f"water left  contra: {'#' * int(self.sensor_values[0] * 50)}")
+		print(f"food  left  contra: {'#' * int(self.sensor_values[1] * 50)}")
+		print(f"trap  left  contra: {'#' * int(self.sensor_values[2] * 50)}")
+		print(f"water right ipsi:   {'#' * int(self.sensor_values[9] * 50)}")
+		print(f"food  right ipsi:   {'#' * int(self.sensor_values[10] * 50)}")
+		print(f"trap  right ipsi:   {'#' * int(self.sensor_values[11] * 50)}")
+		print(f"water left  ipsi:   {'#' * int(self.sensor_values[3] * 50)}")
+		print(f"food  left  ipsi:   {'#' * int(self.sensor_values[4] * 50)}")
+		print(f"trap  left  ipsi:   {'#' * int(self.sensor_values[5] * 50)}")
+		print(f"water right contra: {'#' * int(self.sensor_values[6] * 50)}")
+		print(f"food  right contra: {'#' * int(self.sensor_values[7] * 50)}")
+		print(f"trap  right contra: {'#' * int(self.sensor_values[8] * 50)}")
+		"""
+
 	def draw(self):
 		self.artist\
 			.x_position(self.position[0][0])\
