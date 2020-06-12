@@ -103,7 +103,7 @@ class Robot:
 		# For each (row: thing, col: sensor), compute intensity of sensed value with linear falloff
 		impacts = (simulation_state.arena_width - distances) / simulation_state.arena_width
 
-		excitements = impacts * direction_alignments * self.smell_alignment
+		excitements = impacts * direction_alignments * self.smell_alignment * self.env.thing_is_alive
 
 		self.sensor_values = excitements.max(0)
 
