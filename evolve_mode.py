@@ -57,6 +57,7 @@ def select_and_crossover(genome_a, genome_b, fitness_a, fitness_b):
     winner_genome = genome_a
     loser_genome = genome_b
     trial_data["peak_fitness"] = fitness_b
+    print(f"Tournament fitnesses: A: {fitness_a}\tB: {fitness_b}")
 
     if fitness_a > fitness_b:
         trial_data["peak_fitness"] = fitness_a
