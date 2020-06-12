@@ -66,7 +66,7 @@ class Robot:
 
 	def update(self):
 		self.l_motor, self.r_motor = self.brain.iterate(self.sensor_values)
-		max_speed = 10.0
+		max_speed = 80.0
 
 		if self.is_alive:
 			self.position += simulation_state.timestep * polar2vec(self.angle)[:, np.newaxis] * (self.l_motor + self.r_motor) * max_speed
