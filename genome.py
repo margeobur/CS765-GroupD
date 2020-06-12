@@ -227,7 +227,7 @@ class PiecemealMappingGene(DynamicListGene):
             ElementClass=PiecemealPoint,
             addition_probability=addition_probability,
             removal_probability=removal_probability,
-            init_size_range=(4, 5)
+            init_size_range=(2, 3)
         )
         self.randomise()
 
@@ -247,10 +247,10 @@ class PiecemealMappingGene(DynamicListGene):
 
     def normalise(self):
         self.list.sort(key=attrgetter('x.value'))
-        if len(self.list) < 2:
-            self.list += [PiecemealPoint() for _ in range(2 - len(self.list))]
-        self.list[0].x.value = 0.0
-        self.list[-1].x.value = 1.0
+        # if len(self.list) < 2:
+        #     self.list += [PiecemealPoint() for _ in range(2 - len(self.list))]
+        # self.list[0].x.value = 0.0
+        # self.list[-1].x.value = 1.0
 
 
 class ThingGene(Genetic):

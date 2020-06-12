@@ -30,26 +30,26 @@ def setup():
     test_robot_genome.randomise()
     test_robot_genome.sensors.list[0].mapping.from_flattened([  # contra food/water
         {"x": 0.0, "y": -1.0/2},
-        {"x": 0.3, "y": -0.3/2},
-        {"x": 0.7, "y": 0.3/2},
+        # {"x": 0.3, "y": -0.3/2},
+        # {"x": 0.7, "y": 0.3/2},
         {"x": 1.0, "y": 1.0/2},
     ])
     test_robot_genome.sensors.list[3].mapping.from_flattened([  # ipsi food/water
         {"x": 0.0, "y": 1.0/2},
-        {"x": 0.3, "y": 0.7/2},
-        {"x": 0.7, "y": 0.5/2},
+        # {"x": 0.3, "y": 0.7/2},
+        # {"x": 0.7, "y": 0.5/2},
         {"x": 1.0, "y": 0.5/2},
     ])
     test_robot_genome.sensors.list[5].mapping.from_flattened([  # contra trap
-        {"x": 0.0, "y": 0.0},
-        {"x": 0.3, "y": 0.0},
         {"x": 0.5, "y": 0.0},
+        # {"x": 0.3, "y": 0.0},
+        # {"x": 0.5, "y": 0.0},
         {"x": 1.0, "y": -1.0},
     ])
     test_robot_genome.sensors.list[2].mapping.from_flattened([  # ipsi trap
-        {"x": 0.0, "y": 1.0},
         {"x": 0.3, "y": 1.0},
-        {"x": 0.7, "y": 0.0},
+        # {"x": 0.3, "y": 1.0},
+        # {"x": 0.7, "y": 0.0},
         {"x": 1.0, "y": -0.5},
     ])
     for i in [4, 6, 7]:
