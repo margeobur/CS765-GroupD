@@ -27,7 +27,7 @@ class EvolvableBrain:
         self.mappings = [Mapping(gene) for gene in genome.sensors.list]
 
     def iterate(self, sensor_values):
-        accumulative_motor_power = [0, 0]
+        accumulative_motor_power = [0.5, -0.5]
 
         for mapping, sensor_value in zip(self.mappings, sensor_values):
             accumulative_motor_power += mapping.f(sensor_value)
