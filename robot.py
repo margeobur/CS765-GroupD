@@ -7,6 +7,7 @@ import numpy as np
 from maths import polar2vec, rotation2d
 import math
 import turtle
+import itertools
 
 from robot_artist import RobotArtist
 
@@ -39,10 +40,10 @@ class Robot:
 
 		self.brain = EvolvableBrain(genome)
 		self.env = None
-		self.sensor_values = np.zeros(len(genome.sensors.list))
-		self.sensor_angles = [gene.angle.value for gene in genome.sensors.list]
-		self.sensor_vectors = np.array([polar2vec(gene.angle.value) for gene in genome.sensors.list]).transpose()
-		self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in genome.sensors.list]).transpose()
+		self.sensor_values = np.zeros(12)  # np.zeros(len(genome.sensors.list))
+		self.sensor_angles = [math.pi / 4 if i < 3 or i >= 9 else math.pi * 7 / 4 for i in range(12)]  # [gene.angle.value for gene in genome.sensors.list]
+		self.sensor_vectors = np.array([polar2vec(angle) for angle in self.sensor_angles]).transpose()
+		self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in itertools.chain(genome.sensors.list, genome.sensors.list)]).transpose()
 		self.smell_alignment = None
 
 		# An artist for handling the GUI
@@ -66,7 +67,7 @@ class Robot:
 
 	def update(self):
 		self.l_motor, self.r_motor = self.brain.iterate(self.sensor_values)
-		max_speed = 10.0
+		max_speed = 80.0
 
 		if self.is_alive:
 			self.position += simulation_state.timestep * polar2vec(self.angle)[:, np.newaxis] * (self.l_motor + self.r_motor) * max_speed
@@ -74,7 +75,7 @@ class Robot:
 
 			self.env.interact_with_robot(self)
 			self.food_battery = np.clip(self.food_battery - 0.01 * simulation_state.timestep, 0.0, 1.0)
-			self.water_battery = np.clip(self.food_battery - 0.01 * simulation_state.timestep, 0.0, 1.0)
+			self.water_battery = np.clip(self.water_battery - 0.01 * simulation_state.timestep, 0.0, 1.0)
 
 		if self.food_battery == 0.0 or self.water_battery == 0.0:
 			self.is_alive = False
@@ -97,16 +98,34 @@ class Robot:
 		# For each (row: thing, col: sensor), compute the unit vector from sensor to thing
 		directions = displacements / distances[:, :, np.newaxis]
 
-		# For each (row: thing, col: sensor), compute dot(sensor vector, sensor to thing direction) ^ 3
-		direction_alignments = ((directions * absolute_sensor_vectors.transpose()[np.newaxis, :, :]).sum(2)) ** 3
-		direction_alignments = direction_alignments.clip(min=0)
+		# For each (row: thing, col: sensor), compute dot(sensor vector, sensor to thing direction)
+		direction_alignments = ((directions * absolute_sensor_vectors.transpose()[np.newaxis, :, :]).sum(2))
+
+		# Sensors should not sense what's behind them (important! or else you'll get suboptimal bad behaviour)
+		direction_alignments = direction_alignments.clip(min=0.0)
 
 		# For each (row: thing, col: sensor), compute intensity of sensed value with linear falloff
 		impacts = (simulation_state.arena_width - distances) / simulation_state.arena_width
 
-		excitements = impacts * direction_alignments * self.smell_alignment
+		excitements = impacts * direction_alignments * self.smell_alignment * self.env.thing_is_alive
 
 		self.sensor_values = excitements.max(0)
+
+		"""
+		print("\n"*4)
+		print(f"water left  contra: {'#' * int(self.sensor_values[0] * 50)}")
+		print(f"food  left  contra: {'#' * int(self.sensor_values[1] * 50)}")
+		print(f"trap  left  contra: {'#' * int(self.sensor_values[2] * 50)}")
+		print(f"water right ipsi:   {'#' * int(self.sensor_values[9] * 50)}")
+		print(f"food  right ipsi:   {'#' * int(self.sensor_values[10] * 50)}")
+		print(f"trap  right ipsi:   {'#' * int(self.sensor_values[11] * 50)}")
+		print(f"water left  ipsi:   {'#' * int(self.sensor_values[3] * 50)}")
+		print(f"food  left  ipsi:   {'#' * int(self.sensor_values[4] * 50)}")
+		print(f"trap  left  ipsi:   {'#' * int(self.sensor_values[5] * 50)}")
+		print(f"water right contra: {'#' * int(self.sensor_values[6] * 50)}")
+		print(f"food  right contra: {'#' * int(self.sensor_values[7] * 50)}")
+		print(f"trap  right contra: {'#' * int(self.sensor_values[8] * 50)}")
+		"""
 
 	def draw(self):
 		self.artist\

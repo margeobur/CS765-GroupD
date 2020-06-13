@@ -121,6 +121,7 @@ class Environment:
         self.thing_signatures = np.array([thing.smell_signature for thing in self.everything()]).transpose()
         # self.artist = EnvironmentArtist(1, foods, waters, traps)
         self.thing_radii = np.array([thing.radius for thing in self.everything()])
+        self.thing_is_alive = np.vstack([1 for thing in self.everything()])
 
     def everything(self):
         return itertools.chain(self.foods, self.waters, self.traps)
@@ -139,8 +140,9 @@ class Environment:
                 thing.interact_with_robot(robot)
 
     def update(self):
-        for thing in self.everything():
+        for i, thing in enumerate(self.everything()):
             thing.update()
+            self.thing_is_alive[i][0] = 0 if thing.is_gone() else 1
 
     def draw(self):
         for thing in self.everything():

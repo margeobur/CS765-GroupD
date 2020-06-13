@@ -7,8 +7,8 @@ from robot import Robot
 import simulation_state
 import json
 
-TRIAL_LENGTH = 1500
-N_TRIALS = 1
+TRIAL_LENGTH = int(1500 * 0.08 / simulation_state.timestep)
+N_TRIALS = 4
 NUM_SAMPLES = 15
 environment_fitnesses = np.zeros(simulation_state.pop_size)
 robot_fitnesses = np.zeros(simulation_state.pop_size)
@@ -57,8 +57,9 @@ def select_and_crossover(genome_a, genome_b, fitness_a, fitness_b):
     winner_genome = genome_a
     loser_genome = genome_b
     trial_data["peak_fitness"] = fitness_b
+    print(f"Tournament fitnesses: A: {fitness_a}\tB: {fitness_b}")
 
-    if fitness_a > fitness_b:
+    if fitness_a < fitness_b:
         trial_data["peak_fitness"] = fitness_a
         winner_genome, loser_genome = loser_genome, winner_genome
 
@@ -114,6 +115,11 @@ def iterate_evolve_environment():
 
     select_and_crossover(environment_genome_a, environment_genome_b, fitness_a, fitness_b)
 
+def init_average_fitness():
+    for i, robot_genome in enumerate(simulation_state.robot_genomes):
+        environment_genome = random.choice(simulation_state.environment_genomes)
+        robot_fitnesses[i] = run_trials(environment_genome, robot_genome)
+
 def save_tournament_data():
     global trial_data
     outfile = open("Data/tournament_data" + str(simulation_state.tournament) + ".json", "w")
@@ -140,6 +146,7 @@ def save_population_data():
     outfile.close()
 
 def main():
+    init_average_fitness()
     while True:
         random.choice([
             iterate_evolve_robot,

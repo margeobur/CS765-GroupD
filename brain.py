@@ -1,12 +1,14 @@
 import numpy as np
 import turtle
+import itertools
 from genome import Laterality
 
 
 class Mapping:
-    def __init__(self, gene):
+    def __init__(self, gene, is_left):
         self.n_points = len(gene.mapping.list)
-        self.side_weighting = np.array([1, 0] if gene.motor_side.laterality == Laterality.LEFT else [0, 1])
+        # self.side_weighting = np.array([1, 0] if gene.motor_side.laterality == Laterality.LEFT else [0, 1])
+        self.side_weighting = np.array([1, 0] if is_left else [0, 1])
         self.xs = np.array([point.x.value for point in gene.mapping.list])
         self.ys = np.array([point.y.value for point in gene.mapping.list])
 
@@ -24,10 +26,10 @@ class Mapping:
 
 class EvolvableBrain:
     def __init__(self, genome):
-        self.mappings = [Mapping(gene) for gene in genome.sensors.list]
+        self.mappings = [Mapping(gene, i < 6) for i, gene in enumerate(itertools.chain(genome.sensors.list, genome.sensors.list))]
 
     def iterate(self, sensor_values):
-        accumulative_motor_power = [0, 0]
+        accumulative_motor_power = [0.5, -0.5]
 
         for mapping, sensor_value in zip(self.mappings, sensor_values):
             accumulative_motor_power += mapping.f(sensor_value)
