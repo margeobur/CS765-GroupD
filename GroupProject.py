@@ -177,7 +177,7 @@ def setup():
         simulation_state.robot_genomes.append(robot_genome)
         simulation_state.environment_genomes.append(environment_genome)
 
-    simulation_state.robot_genomes[0] = test_robot_genome
+    # simulation_state.robot_genomes[0] = test_robot_genome
 
     if LOAD_INITIAL_POPULATION_FROM is not None:
         best_robot_index = None
