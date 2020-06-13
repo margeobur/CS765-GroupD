@@ -7,7 +7,6 @@ import numpy as np
 from maths import polar2vec, rotation2d
 import math
 import turtle
-import itertools
 
 from robot_artist import RobotArtist
 
@@ -40,10 +39,10 @@ class Robot:
 
 		self.brain = EvolvableBrain(genome)
 		self.env = None
-		self.sensor_values = np.zeros(12)  # np.zeros(len(genome.sensors.list))
-		self.sensor_angles = [math.pi / 4 if i < 3 or i >= 9 else math.pi * 7 / 4 for i in range(12)]  # [gene.angle.value for gene in genome.sensors.list]
+		self.sensor_values = np.zeros(len(genome.sensors.list))
+		self.sensor_angles = [gene.angle.value for gene in genome.sensors.list]
 		self.sensor_vectors = np.array([polar2vec(angle) for angle in self.sensor_angles]).transpose()
-		self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in itertools.chain(genome.sensors.list, genome.sensors.list)]).transpose()
+		self.sensor_signatures = np.array([gene.smell_signature.flatten() for gene in genome.sensors.list]).transpose()
 		self.smell_alignment = None
 
 		# An artist for handling the GUI
@@ -110,22 +109,6 @@ class Robot:
 		excitements = impacts * direction_alignments * self.smell_alignment * self.env.thing_is_alive
 
 		self.sensor_values = excitements.max(0)
-
-		"""
-		print("\n"*4)
-		print(f"water left  contra: {'#' * int(self.sensor_values[0] * 50)}")
-		print(f"food  left  contra: {'#' * int(self.sensor_values[1] * 50)}")
-		print(f"trap  left  contra: {'#' * int(self.sensor_values[2] * 50)}")
-		print(f"water right ipsi:   {'#' * int(self.sensor_values[9] * 50)}")
-		print(f"food  right ipsi:   {'#' * int(self.sensor_values[10] * 50)}")
-		print(f"trap  right ipsi:   {'#' * int(self.sensor_values[11] * 50)}")
-		print(f"water left  ipsi:   {'#' * int(self.sensor_values[3] * 50)}")
-		print(f"food  left  ipsi:   {'#' * int(self.sensor_values[4] * 50)}")
-		print(f"trap  left  ipsi:   {'#' * int(self.sensor_values[5] * 50)}")
-		print(f"water right contra: {'#' * int(self.sensor_values[6] * 50)}")
-		print(f"food  right contra: {'#' * int(self.sensor_values[7] * 50)}")
-		print(f"trap  right contra: {'#' * int(self.sensor_values[8] * 50)}")
-		"""
 
 	def draw(self):
 		self.artist\

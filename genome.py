@@ -247,10 +247,6 @@ class PiecemealMappingGene(DynamicListGene):
 
     def normalise(self):
         self.list.sort(key=attrgetter('x.value'))
-        # if len(self.list) < 2:
-        #     self.list += [PiecemealPoint() for _ in range(2 - len(self.list))]
-        # self.list[0].x.value = 0.0
-        # self.list[-1].x.value = 1.0
 
 
 class ThingGene(Genetic):
@@ -312,52 +308,23 @@ class EnvironmentGenome(Genetic):
 class SensorGene(Genetic):
     def __init__(self):
         super().__init__()
-
-        # Either
-        # self.threshold = FloatGene()
-        # or
         self.mapping = PiecemealMappingGene()
-
-        # self.angle = FloatGene(bounds=(0.0, 2.0 * math.pi), wrap=True)
+        self.angle = FloatGene(bounds=(0.0, 2.0 * math.pi), wrap=True)
         self.smell_signature = SmellSignatureGene()
-
-        # self.motor_side = LateralityGene()
+        self.motor_side = LateralityGene()
 
     def incompatibility_with(self, other_sensor):
-        # laterality_incompatibility = (
-        #     0 if self.motor_side.laterality == other_sensor.motor_side.laterality
-        #     else SmellSignatureGene.MAX_INCOMPATIBILITY
-        # )
-        # return laterality_incompatibility + self.smell_signature.incompatibility_with(other_sensor.smell_signature)
-        return self.smell_signature.incompatibility_with(other_sensor.smell_signature)
+        laterality_incompatibility = (
+            0 if self.motor_side.laterality == other_sensor.motor_side.laterality
+            else SmellSignatureGene.MAX_INCOMPATIBILITY
+        )
+        return laterality_incompatibility + self.smell_signature.incompatibility_with(other_sensor.smell_signature)
 
 
 class RobotGenome(Genetic):
     def __init__(self):
         super().__init__()
-        self.sensors = DynamicListGene(SensorGene, init_size_range=(6, 7), addition_probability=0.0, removal_probability=0.0)
-
-    def randomise(self):
-        super().randomise()
-        self.normalise()
-
-    def mutate(self):
-        super().mutate()
-        self.normalise()
-
-    def crossover(self, source):
-        super().crossover(source)
-        self.normalise()
-
-    def normalise(self):
-        for i, sensor in enumerate(self.sensors.list):
-            # sensor.angle.value = math.pi / 4 if i < 6 else math.pi * 7 / 4
-            sensor.smell_signature.list[0].value = 1 if i % 3 == 0 else 0
-            sensor.smell_signature.list[1].value = 1 if i % 3 == 1 else 0
-            sensor.smell_signature.list[2].value = 1 if i % 3 == 2 else 0
-            sensor.smell_signature.list[3].value = 0
-            sensor.smell_signature.list[4].value = 0
-            # sensor.motor_side.laterality = Laterality.LEFT if (i // 3) % 2 == 0 else Laterality.RIGHT
+        self.sensors = DynamicListGene(SensorGene, init_size_range=(3, 7), addition_probability=0.05, removal_probability=0.05)
 
 
 def full_examples():
