@@ -304,9 +304,36 @@ class LateralityGene(Genetic):
 class EnvironmentGenome(Genetic):
     def __init__(self):
         super().__init__()
-        self.water_genes = DynamicListGene(ThingGene)
-        self.food_genes = DynamicListGene(ThingGene)
-        self.trap_genes = DynamicListGene(ThingGene)
+        self.water_genes = DynamicListGene(ThingGene, addition_probability=0.0, removal_probability=0.0, init_size_range=(2, 3))
+        self.food_genes = DynamicListGene(ThingGene, addition_probability=0.0, removal_probability=0.0, init_size_range=(2, 3))
+        self.trap_genes = DynamicListGene(ThingGene, addition_probability=0.0, removal_probability=0.0, init_size_range=(2, 3))
+
+    def randomise(self):
+        super().randomise()
+        self.normalise()
+
+    def mutate(self):
+        super().mutate()
+        self.normalise()
+
+    def crossover(self, source):
+        super().crossover(source)
+        self.normalise()
+
+    def normalise(self):
+        for gene in self.water_genes.list:
+            gene.smell_signature.list[2].value = 0
+            gene.smell_signature.list[3].value = 0
+            gene.smell_signature.list[4].value = 0
+        for gene in self.food_genes.list:
+            gene.smell_signature.list[0].value = 0
+            gene.smell_signature.list[1].value = 0
+            gene.smell_signature.list[4].value = 0
+        for gene in self.trap_genes.list:
+            gene.smell_signature.list[0].value = 0
+            gene.smell_signature.list[1].value = 0
+            gene.smell_signature.list[2].value = 0
+            gene.smell_signature.list[3].value = 0
 
 
 class SensorGene(Genetic):
@@ -351,13 +378,14 @@ class RobotGenome(Genetic):
 
     def normalise(self):
         for i, sensor in enumerate(self.sensors.list):
-            # sensor.angle.value = math.pi / 4 if i < 6 else math.pi * 7 / 4
-            sensor.smell_signature.list[0].value = 1 if i % 3 == 0 else 0
-            sensor.smell_signature.list[1].value = 1 if i % 3 == 1 else 0
-            sensor.smell_signature.list[2].value = 1 if i % 3 == 2 else 0
-            sensor.smell_signature.list[3].value = 0
-            sensor.smell_signature.list[4].value = 0
-            # sensor.motor_side.laterality = Laterality.LEFT if (i // 3) % 2 == 0 else Laterality.RIGHT
+            # Water sensors smell channels:
+            sensor.smell_signature.list[0].value *= 1 if i % 3 == 0 else 0
+            sensor.smell_signature.list[1].value *= 1 if i % 3 == 0 else 0
+            # Food sensors smell channels:
+            sensor.smell_signature.list[2].value *= 1 if i % 3 == 1 else 0
+            sensor.smell_signature.list[3].value *= 1 if i % 3 == 1 else 0
+            # Trap sensors smell channels:
+            sensor.smell_signature.list[4].value *= 1 if i % 3 == 2 else 0
 
 
 def full_examples():
