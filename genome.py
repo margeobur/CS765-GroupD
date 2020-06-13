@@ -300,9 +300,9 @@ class LateralityGene(Genetic):
 class EnvironmentGenome(Genetic):
     def __init__(self):
         super().__init__()
-        self.water_genes = DynamicListGene(ThingGene)
-        self.food_genes = DynamicListGene(ThingGene)
-        self.trap_genes = DynamicListGene(ThingGene)
+        self.water_genes = DynamicListGene(ThingGene, init_size_range=(1, 3), addition_probability=0.05, removal_probability=0.05)
+        self.food_genes = DynamicListGene(ThingGene, init_size_range=(1, 3), addition_probability=0.05, removal_probability=0.05)
+        self.trap_genes = DynamicListGene(ThingGene, init_size_range=(1, 3), addition_probability=0.05, removal_probability=0.05)
 
 
 class SensorGene(Genetic):

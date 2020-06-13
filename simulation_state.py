@@ -10,3 +10,4 @@ environment_genomes = []
 robot_genomes = []
 
 ENABLE_DRAWING = True
+EVOLVE_ONLY_ROBOT = False

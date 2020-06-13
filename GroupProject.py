@@ -30,6 +30,9 @@ def setup():
     for _ in range(simulation_state.pop_size):
         robot_genome = RobotGenome()
         robot_genome.randomise()
+        if not simulation_state.EVOLVE_ONLY_ROBOT:
+            environment_genome = EnvironmentGenome()
+            environment_genome.randomise()
         simulation_state.robot_genomes.append(robot_genome)
         simulation_state.environment_genomes.append(environment_genome)
 

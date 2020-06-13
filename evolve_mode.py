@@ -148,10 +148,8 @@ def save_population_data():
 def main():
     init_average_fitness()
     while True:
-        random.choice([
-            iterate_evolve_robot,
-            # iterate_evolve_environment,
-        ])()
+        random.choice([iterate_evolve_robot] if simulation_state.EVOLVE_ONLY_ROBOT
+                      else [iterate_evolve_robot, iterate_evolve_environment])()
         save_tournament_data()
         save_population_data()
 
