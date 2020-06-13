@@ -7,7 +7,7 @@ import itertools
 
 
 #SET NUMBER OF TOURNAMENTS
-number_of_tournaments = 10
+number_of_tournaments = 1400
 
 #SET POPULATION NUM
 num_pop = 30
@@ -18,6 +18,8 @@ mean_environment_fitnesses = [0] * number_of_tournaments
 peak_population_robot_fitnesses = [0] * number_of_tournaments
 peak_population_environment_fitnesses = [0] * number_of_tournaments
 total_thing_amount = [0] * number_of_tournaments
+total_energy_amount = [0] * number_of_tournaments
+total_trap_amount = [0] * number_of_tournaments
 total_sensor_amount = [0] * number_of_tournaments
 
 winner_num_of_water_genes = [0] * number_of_tournaments
@@ -47,6 +49,19 @@ for filename in os.listdir("Data"):
                 for thing in itertools.chain(environment["water_genes"], environment["food_genes"], environment["trap_genes"]):
                     total_thing_amount[tournament] += thing["amount"]
             total_thing_amount[tournament] /= len(data["environment_genomes"])
+
+            total_energy_amount[tournament] = 0
+            for _, environment in data["environment_genomes"].items():
+                for thing in itertools.chain(environment["water_genes"], environment["food_genes"]):
+                    total_energy_amount[tournament] += thing["amount"]
+            total_energy_amount[tournament] /= len(data["environment_genomes"])
+
+            total_trap_amount[tournament] = 0
+            for _, environment in data["environment_genomes"].items():
+                for thing in environment["trap_genes"]:
+                    total_trap_amount[tournament] += thing["amount"]
+            total_trap_amount[tournament] /= len(data["environment_genomes"])
+
             total_sensor_amount[tournament] = 0
             for _, robot in data["robot_genomes"].items():
                 total_sensor_amount[tournament] += len(robot["sensors"])
@@ -162,7 +177,10 @@ plt.figure(9)
 plt.ylabel("amount of things")
 plt.xlabel("tournament")
 plt.title("mean number of things for each tournament")
-plt.plot(range(1, number_of_tournaments + 1), total_thing_amount)
+plt.plot(range(1, number_of_tournaments + 1), total_thing_amount, color='b', label='Food + Water + Traps')
+plt.plot(range(1, number_of_tournaments + 1), total_energy_amount, color='g', label='Food + Water')
+plt.plot(range(1, number_of_tournaments + 1), total_trap_amount, color='r', label='Traps')
+plt.legend()
 plt.savefig("Graphs/mean_number_of_things_for_each_tournament.png")
 
 #graph of number of sensors across population for each tournament
