@@ -115,7 +115,7 @@ class Environment:
         trap_amount_multiplier = (len(self.foods) + len(self.waters)) / trap_written_sum
 
         for gene in genome.trap_genes.list:
-            for _ in range(int(gene.amount.value * trap_amount_multiplier)):
+            for _ in range(max(1, int(gene.amount.value * trap_amount_multiplier))):
                 self.traps.append(Trap(gene))
 
         self.thing_signatures = np.array([thing.smell_signature for thing in self.everything()]).transpose()
