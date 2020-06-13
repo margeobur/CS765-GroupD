@@ -335,7 +335,7 @@ class SensorGene(Genetic):
 class RobotGenome(Genetic):
     def __init__(self):
         super().__init__()
-        self.sensors = DynamicListGene(SensorGene, init_size_range=(6, 7))
+        self.sensors = DynamicListGene(SensorGene, init_size_range=(6, 7), addition_probability=0.0, removal_probability=0.0)
 
     def randomise(self):
         super().randomise()
